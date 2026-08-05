@@ -1,0 +1,6 @@
+kaelah_ai_connector.settings:
+  title: 'Kaelah AI'
+  description: 'Connect this site to Kaelah AI.'
+  route_name: kaelah_ai_connector.settings
+  parent: system.admin_config_services
+  weight: 0

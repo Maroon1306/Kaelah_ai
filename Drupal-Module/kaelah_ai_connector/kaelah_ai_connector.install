@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * @file
+ * Install/uninstall hooks for Kaelah AI Connector.
+ */
+
+/**
+ * Implements hook_uninstall().
+ */
+function kaelah_ai_connector_uninstall() {
+  $state = \Drupal::state();
+  $state->delete('kaelah_ai_connector.access_token');
+  $state->delete('kaelah_ai_connector.connected_at');
+  $state->delete('kaelah_ai_connector.homepage_seo_title');
+  $state->delete('kaelah_ai_connector.homepage_seo_description');
+  $state->delete('kaelah_ai_connector.homepage_geo_summary');
+  $state->delete('kaelah_ai_connector.homepage_geo_qa');
+  $state->delete('kaelah_ai_connector.homepage_geo_structured_note');
+  $state->delete('kaelah_ai_connector.llms_txt');
+}

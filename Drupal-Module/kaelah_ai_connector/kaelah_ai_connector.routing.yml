@@ -1,0 +1,99 @@
+kaelah_ai_connector.settings:
+  path: '/admin/config/services/kaelah-ai-connector'
+  defaults:
+    _controller: '\Drupal\kaelah_ai_connector\Controller\KaelahAdminController::settingsPage'
+    _title: 'Kaelah AI Connector'
+  requirements:
+    _permission: 'administer kaelah ai connector'
+  methods: [GET]
+
+kaelah_ai_connector.disconnect:
+  path: '/admin/config/services/kaelah-ai-connector/disconnect'
+  defaults:
+    _form: '\Drupal\kaelah_ai_connector\Form\KaelahDisconnectForm'
+    _title: 'Disconnect Kaelah AI'
+  requirements:
+    _permission: 'administer kaelah ai connector'
+
+kaelah_ai_connector.api.site_info:
+  path: '/kaelah-api/v1/site-info'
+  defaults:
+    _controller: '\Drupal\kaelah_ai_connector\Controller\KaelahApiController::siteInfo'
+  requirements:
+    _access: 'TRUE'
+  methods: [GET]
+
+kaelah_ai_connector.api.content_list:
+  path: '/kaelah-api/v1/content'
+  defaults:
+    _controller: '\Drupal\kaelah_ai_connector\Controller\KaelahApiController::contentList'
+  requirements:
+    _access: 'TRUE'
+  methods: [GET]
+
+kaelah_ai_connector.api.content_update:
+  path: '/kaelah-api/v1/content/{node}'
+  defaults:
+    _controller: '\Drupal\kaelah_ai_connector\Controller\KaelahApiController::updateContent'
+  requirements:
+    _access: 'TRUE'
+    node: '\d+'
+  methods: [POST]
+
+kaelah_ai_connector.api.seo_update:
+  path: '/kaelah-api/v1/seo/{node}'
+  defaults:
+    _controller: '\Drupal\kaelah_ai_connector\Controller\KaelahApiController::updateSeo'
+  requirements:
+    _access: 'TRUE'
+    node: '\d+'
+  methods: [POST]
+
+kaelah_ai_connector.api.seo_homepage:
+  path: '/kaelah-api/v1/seo/homepage'
+  defaults:
+    _controller: '\Drupal\kaelah_ai_connector\Controller\KaelahApiController::updateHomepageSeo'
+  requirements:
+    _access: 'TRUE'
+  methods: [POST]
+
+kaelah_ai_connector.api.geo_update:
+  path: '/kaelah-api/v1/geo/{node}'
+  defaults:
+    _controller: '\Drupal\kaelah_ai_connector\Controller\KaelahApiController::updateGeo'
+  requirements:
+    _access: 'TRUE'
+    node: '\d+'
+  methods: [POST]
+
+kaelah_ai_connector.api.geo_homepage:
+  path: '/kaelah-api/v1/geo/homepage'
+  defaults:
+    _controller: '\Drupal\kaelah_ai_connector\Controller\KaelahApiController::updateHomepageGeo'
+  requirements:
+    _access: 'TRUE'
+  methods: [POST]
+
+kaelah_ai_connector.api.llms_txt_get:
+  path: '/kaelah-api/v1/llms-txt'
+  defaults:
+    _controller: '\Drupal\kaelah_ai_connector\Controller\KaelahApiController::getLlmsTxt'
+  requirements:
+    _access: 'TRUE'
+  methods: [GET]
+
+kaelah_ai_connector.api.llms_txt_update:
+  path: '/kaelah-api/v1/llms-txt'
+  defaults:
+    _controller: '\Drupal\kaelah_ai_connector\Controller\KaelahApiController::updateLlmsTxt'
+  requirements:
+    _access: 'TRUE'
+  methods: [POST]
+
+kaelah_ai_connector.llms_txt_serve:
+  path: '/llms.txt'
+  defaults:
+    _controller: '\Drupal\kaelah_ai_connector\Controller\KaelahApiController::serveLlmsTxt'
+  requirements:
+    _access: 'TRUE'
+  methods: [GET]

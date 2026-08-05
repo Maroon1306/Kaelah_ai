@@ -1,0 +1,127 @@
+<?php
+
+/**
+ * @file
+ * Kaelah AI Connector — secure gateway between this Drupal site and Kaelah AI.
+ */
+
+// Where Kaelah AI is hosted. Update these two constants once you have a real
+// production domain — during local development they point at localhost.
+if (!defined('KAELAH_APP_URL')) {
+  define('KAELAH_APP_URL', 'http://localhost:5173');
+}
+if (!defined('KAELAH_API_URL')) {
+  define('KAELAH_API_URL', 'http://localhost:4000');
+}
+
+/**
+ * Implements hook_preprocess_html().
+ *
+ * Overrides the rendered <title> tag with the SEO title Kaelah AI has set,
+ * for the current node or the site's front page. This is the only place
+ * that actually makes a Kaelah SEO update visible on the live site.
+ */
+function kaelah_ai_connector_preprocess_html(array &$variables) {
+  $state = \Drupal::state();
+  $is_front = \Drupal::service('path.matcher')->isFrontPage();
+
+  // Kaelah's title is the full, final <title> tag — replace the whole
+  // head_title array (which core would otherwise join with " | Site Name")
+  // rather than appending to it, so it never overshoots the length budget.
+  if ($is_front) {
+    $title = $state->get('kaelah_ai_connector.homepage_seo_title');
+    if ($title) {
+      $variables['head_title'] = ['title' => $title];
+    }
+    return;
+  }
+
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if ($node instanceof \Drupal\node\NodeInterface) {
+    $title = $state->get('kaelah_ai_connector.seo_title.' . $node->id());
+    if ($title) {
+      $variables['head_title'] = ['title' => $title];
+    }
+  }
+}
+
+/**
+ * Implements hook_page_attachments().
+ *
+ * Injects the <meta name="description"> tag Kaelah AI has set, for the
+ * current node or the site's front page.
+ */
+function kaelah_ai_connector_page_attachments(array &$attachments) {
+  $state = \Drupal::state();
+  $is_front = \Drupal::service('path.matcher')->isFrontPage();
+
+  $description = NULL;
+  if ($is_front) {
+    $description = $state->get('kaelah_ai_connector.homepage_seo_description');
+  }
+  else {
+    $node = \Drupal::routeMatch()->getParameter('node');
+    if ($node instanceof \Drupal\node\NodeInterface) {
+      $description = $state->get('kaelah_ai_connector.seo_description.' . $node->id());
+    }
+  }
+
+  if ($description) {
+    $attachments['#attached']['html_head'][] = [
+      [
+        '#tag' => 'meta',
+        '#attributes' => [
+          'name' => 'description',
+          'content' => $description,
+        ],
+      ],
+      'kaelah_seo_description',
+    ];
+  }
+
+  // GEO: render a real FAQPage JSON-LD block from Kaelah's Q&A pairs, so
+  // generative search engines can actually discover and cite this content —
+  // for the current node, or for the site's front page.
+  $qa_pairs = [];
+  if ($is_front) {
+    $qa_pairs = $state->get('kaelah_ai_connector.homepage_geo_qa', []);
+  }
+  else {
+    $node = \Drupal::routeMatch()->getParameter('node');
+    if ($node instanceof \Drupal\node\NodeInterface) {
+      $qa_pairs = $state->get('kaelah_ai_connector.geo_qa.' . $node->id(), []);
+    }
+  }
+
+  if (!empty($qa_pairs)) {
+    $entities = [];
+    foreach ($qa_pairs as $pair) {
+      if (empty($pair['question']) || empty($pair['answer'])) {
+        continue;
+      }
+      $entities[] = [
+        '@type' => 'Question',
+        'name' => $pair['question'],
+        'acceptedAnswer' => [
+          '@type' => 'Answer',
+          'text' => $pair['answer'],
+        ],
+      ];
+    }
+    if (!empty($entities)) {
+      $schema = [
+        '@context' => 'https://schema.org',
+        '@type' => 'FAQPage',
+        'mainEntity' => $entities,
+      ];
+      $attachments['#attached']['html_head'][] = [
+        [
+          '#tag' => 'script',
+          '#attributes' => ['type' => 'application/ld+json'],
+          '#value' => json_encode($schema),
+        ],
+        'kaelah_geo_structured_data',
+      ];
+    }
+  }
+}

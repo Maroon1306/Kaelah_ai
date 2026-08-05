@@ -1,0 +1,5 @@
+name: 'Kaelah AI Connector'
+type: module
+description: 'Connects this site to Kaelah AI in one click — no API key or password to copy and paste. All intelligence (SEO, GEO, optimizations) stays on Kaelah AI servers; this module is only a secure gateway.'
+package: 'Kaelah AI'
+core_version_requirement: ^9 || ^10 || ^11

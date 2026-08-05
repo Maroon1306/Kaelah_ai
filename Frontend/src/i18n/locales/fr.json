@@ -1,0 +1,511 @@
+{
+  "common": {
+    "brand": "Kaelah",
+    "brandSuffix": " AI",
+    "languageToggle": "Changer la langue",
+    "close": "Fermer",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu",
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "save": "Enregistrer",
+    "loading": "Chargement...",
+    "showPassword": "Afficher le mot de passe",
+    "hidePassword": "Masquer le mot de passe",
+    "download": "Télécharger",
+    "backToChat": "Retour au chat",
+    "accountMenu": "Menu du compte"
+  },
+  "nav": {
+    "links": { "features": "Fonctionnalités", "solutions": "Solutions", "pricing": "Tarifs" },
+    "login": "Connexion",
+    "cta": "Commencer gratuitement"
+  },
+  "sidebar": {
+    "newConversation": "Nouvelle conversation",
+    "suggestions": "Suggestions",
+    "history": "Historique",
+    "noHistory": "Aucune conversation pour le moment.",
+    "settings": "Paramètres",
+    "profile": "Profil",
+    "logout": "Se déconnecter",
+    "collapse": "Replier le menu",
+    "expand": "Déplier le menu"
+  },
+  "auth": {
+    "privacyPolicy": "Politique de confidentialité",
+    "termsOfService": "Conditions d'utilisation",
+    "contactSupport": "Contacter le support",
+    "login": {
+      "title": "Connexion",
+      "subtitle": "Bon retour. Kaelah vous attend.",
+      "submit": "Se connecter",
+      "noAccount": "Pas encore de compte ?",
+      "createAccount": "Créer un compte"
+    },
+    "register": {
+      "title": "Créer un compte",
+      "subtitle": "Démarrez gratuitement avec Kaelah en 2 minutes.",
+      "submit": "Créer mon compte",
+      "hasAccount": "Déjà un compte ?",
+      "signIn": "Se connecter",
+      "terms": "J'accepte les <1>conditions d'utilisation</1>"
+    },
+    "fields": {
+      "fullName": "Nom complet",
+      "fullNamePlaceholder": "Jean Dupont",
+      "email": "Email",
+      "emailPlaceholder": "vous@entreprise.com",
+      "password": "Mot de passe",
+      "passwordPlaceholder": "••••••••",
+      "rememberMe": "Se souvenir de moi",
+      "forgotPassword": "Mot de passe oublié ?"
+    }
+  },
+  "onboarding": {
+    "steps": { "welcome": "Bienvenue", "company": "Entreprise", "activity": "Activité", "done": "Terminé" },
+    "step0": { "title": "Bienvenue dans Kaelah AI", "subtitle": "Votre assistant IA spécialisé pour le e-commerce. Configurons votre espace en 3 étapes." },
+    "step1": { "title": "Nom de votre entreprise", "subtitle": "Comment s'appelle votre boutique ou société ?", "placeholder": "Ma Boutique" },
+    "step2": { "title": "Type d'activité", "subtitle": "Quel est votre profil ?" },
+    "step3": { "title": "Tout est prêt !", "subtitleWithName": "Bienvenue, {{name}}. Kaelah est prêt à piloter votre commerce.", "subtitle": "Kaelah est prêt à piloter votre commerce." },
+    "back": "Retour",
+    "continue": "Continuer",
+    "goToChat": "Accéder au chat",
+    "redirecting": "Redirection dans {{seconds}}s..."
+  },
+  "chat": {
+    "title": "Conversation",
+    "emptyTitle": "Bonjour, je suis Kaelah",
+    "emptySubtitle": "Votre assistant IA e-commerce. Comment puis-je vous aider aujourd'hui ?",
+    "inputPlaceholder": "Demandez quelque chose à Kaelah...",
+    "disclaimer": "Kaelah peut faire des erreurs. Vérifiez les informations importantes.",
+    "attachFile": "Joindre un fichier",
+    "attachImage": "Joindre une image",
+    "voiceInput": "Entrée vocale",
+    "aiTools": "Outils IA",
+    "send": "Envoyer",
+    "thinking": "Kaelah réfléchit...",
+    "analyzing": "Analyse des données...",
+    "copy": "Copier",
+    "like": "J'aime",
+    "dislike": "Je n'aime pas",
+    "regenerate": "Régénérer la réponse",
+    "confirmAction": "Confirmer",
+    "rejectAction": "Rejeter",
+    "actions": {
+      "updateShopifyProductSeo": "Mettre à jour le SEO du produit Shopify",
+      "updateShopifyShopSeo": "Mettre à jour le SEO de la page d'accueil",
+      "updateWordpressSeo": "Mettre à jour le SEO WordPress",
+      "updateWordpressHomepageSeo": "Mettre à jour le SEO de la page d'accueil WordPress",
+      "updateWordpressGeo": "Optimiser le GEO WordPress",
+      "updateWordpressHomepageGeo": "Optimiser le GEO de la page d'accueil WordPress",
+      "updateWordpressLlmsTxt": "Publier le fichier llms.txt (WordPress)",
+      "updateDrupalSeo": "Mettre à jour le SEO Drupal",
+      "updateDrupalHomepageSeo": "Mettre à jour le SEO de la page d'accueil Drupal",
+      "updateDrupalGeo": "Optimiser le GEO Drupal",
+      "updateDrupalHomepageGeo": "Optimiser le GEO de la page d'accueil Drupal",
+      "updateDrupalLlmsTxt": "Publier le fichier llms.txt (Drupal)",
+      "updateBigcommerceProductSeo": "Mettre à jour le SEO du produit BigCommerce",
+      "updateBigcommerceShopSeo": "Mettre à jour le SEO de la page d'accueil BigCommerce",
+      "updatePrestashopProductSeo": "Mettre à jour le SEO du produit PrestaShop",
+      "updatePrestashopHomepageSeo": "Mettre à jour le SEO de la page d'accueil PrestaShop",
+      "updatePrestashopProductGeo": "Optimiser le GEO du produit PrestaShop",
+      "updatePrestashopHomepageGeo": "Optimiser le GEO de la page d'accueil PrestaShop",
+      "updatePrestashopLlmsTxt": "Publier le fichier llms.txt (PrestaShop)",
+      "updateWixProductSeo": "Mettre à jour le SEO du produit Wix",
+      "generic": "Action proposée : {{name}}",
+      "executed": "Action appliquée",
+      "rejectedLabel": "Action rejetée",
+      "failed": "L'action a échoué"
+    },
+    "share": "Partager",
+    "moreOptions": "Plus d'options",
+    "agentSteps": {
+      "comprehension": "Compréhension",
+      "connection": "Connexion",
+      "analysis": "Analyse",
+      "generation": "Génération"
+    },
+    "contextPanel": {
+      "heading": "Contexte actuel",
+      "collapse": "Replier le panneau",
+      "expand": "Déplier le panneau",
+      "platforms": "Plateformes",
+      "recentActions": "Actions récentes",
+      "upgradeTitle": "Passez au niveau supérieur",
+      "upgradeDesc": "Accédez à l'automatisation complète de vos fiches produits.",
+      "upgradeButton": "Upgrade Pro"
+    }
+  },
+  "settings": {
+    "title": "Paramètres",
+    "subtitle": "Gérez votre compte et vos préférences.",
+    "comingSoon": "Bientôt disponible",
+    "sections": {
+      "account": "Compte",
+      "ai": "Préférences IA",
+      "notifications": "Notifications",
+      "security": "Sécurité",
+      "connectors": "Connecteurs",
+      "billing": "Abonnement",
+      "team": "Équipe",
+      "help": "Aide"
+    },
+    "account": {
+      "heading": "Compte",
+      "fullName": "Nom complet",
+      "email": "Email",
+      "companyName": "Nom de l'entreprise",
+      "save": "Enregistrer"
+    },
+    "ai": {
+      "heading": "Préférences IA",
+      "tone": "Ton de réponse",
+      "toneOptions": { "professional": "Professionnel", "friendly": "Amical", "concise": "Concis" },
+      "autoActions": "Actions automatiques",
+      "autoActionsDesc": "Laisser Kaelah appliquer certaines actions sans confirmation",
+      "language": "Langue",
+      "languageOptions": { "fr": "Français", "en": "Anglais" }
+    },
+    "notifications": {
+      "heading": "Notifications",
+      "email": { "label": "Notifications email", "desc": "Recevoir les alertes par email" },
+      "push": { "label": "Notifications push", "desc": "Alertes en temps réel sur votre navigateur" },
+      "weekly": { "label": "Rapport hebdomadaire", "desc": "Synthèse de votre activité chaque lundi" }
+    },
+    "security": {
+      "heading": "Sécurité",
+      "currentPassword": "Mot de passe actuel",
+      "newPassword": "Nouveau mot de passe",
+      "update": "Mettre à jour",
+      "updating": "Mise à jour...",
+      "updateSuccess": "Mot de passe mis à jour.",
+      "passwordTooShort": "Le nouveau mot de passe doit contenir au moins 8 caractères.",
+      "twoFactorHeading": "Authentification à deux facteurs",
+      "twoFactorDesc": "Sécurisez votre compte avec un code temporaire.",
+      "enable2fa": "Activer 2FA"
+    },
+    "team": {
+      "heading": "Équipe",
+      "invite": "Inviter",
+      "comingSoon": "Bientôt disponible",
+      "columns": { "member": "Membre", "role": "Rôle", "lastActive": "Dernière activité" },
+      "roles": { "admin": "Admin", "collaborator": "Collaborateur", "analyst": "Analyste" }
+    },
+    "help": {
+      "heading": "Aide & Support",
+      "knowledgeBase": { "title": "Base de connaissances", "desc": "Trouvez des tutoriels et de la documentation complète." },
+      "liveChat": { "title": "Chat avec le Support", "desc": "Parlez en direct avec un expert Kaelah (24/7)." }
+    }
+  },
+  "profile": {
+    "title": "Profil",
+    "subtitle": "Votre identité et vos statistiques.",
+    "companyLine": "{{company}}",
+    "info": { "email": "Email", "company": "Entreprise", "type": "Type", "typeValue": "E-commerce" },
+    "statsHeading": "Statistiques",
+    "stats": {
+      "messages": "Messages IA envoyés",
+      "automations": "Automatisations actives",
+      "connectors": "Connecteurs liés"
+    },
+    "dangerZone": {
+      "heading": "Zone de danger",
+      "desc": "Supprimer définitivement votre compte et toutes vos données.",
+      "delete": "Supprimer le compte",
+      "confirm": "Cette action est irréversible. Supprimer définitivement votre compte et toutes vos données ?"
+    }
+  },
+  "billing": {
+    "title": "Abonnement",
+    "subtitle": "Gérez votre plan et votre utilisation.",
+    "currentPlanLabel": "Plan actuel",
+    "manageSubscription": "Gérer mon abonnement",
+    "changePlan": "Changer de plan",
+    "usage": { "messages": "Messages IA", "automations": "Automatisations", "connectors": "Connecteurs" },
+    "yourPlan": "Votre plan",
+    "changePlanHeading": "Changer de plan",
+    "invoicesHeading": "Factures",
+    "noInvoices": "Aucune facture pour le moment.",
+    "invoiceStatus": { "paid": "Payée", "open": "En attente" },
+    "planNames": { "starter": "Starter", "pro": "Pro", "business": "Business" },
+    "notConfigured": "La facturation n'est pas encore configurée côté serveur."
+  },
+  "connectors": {
+    "title": "Connecteurs",
+    "subtitle": "Reliez vos outils à Kaelah pour débloquer l'automatisation.",
+    "connected": "Connecté",
+    "notConnected": "Non connecté",
+    "syncActive": "Synchronisation active",
+    "disconnect": "Déconnecter",
+    "connecting": "Connexion...",
+    "connect": "Connecter",
+    "modalTitle": "Connecter {{name}}",
+    "authorize": "Autoriser",
+    "shopifyPrompt": "Domaine de votre boutique Shopify (ex: maboutique.myshopify.com)",
+    "connectSuccess": "{{name}} a été connecté avec succès.",
+    "connectError": "La connexion à {{name}} a échoué. Réessayez.",
+    "fields": {
+      "siteUrl": "URL du site",
+      "consumerKey": "Clé consommateur (Consumer Key)",
+      "consumerSecret": "Secret consommateur (Consumer Secret)"
+    },
+    "viaPlugin": "Se connecte via le plugin officiel"
+  },
+  "emailVerify": {
+    "prompt": "Vérifie ton adresse {{email}} — entre le code reçu par email :",
+    "codePlaceholder": "000000",
+    "confirm": "Vérifier",
+    "resend": "Renvoyer le code",
+    "resent": "Code renvoyé",
+    "sending": "Envoi...",
+    "error": "Erreur de vérification."
+  },
+  "connectAuthorize": {
+    "title": "Connecter {{provider}} à Kaelah AI",
+    "description": "Le site {{site}} souhaite se connecter à ton compte Kaelah AI ({{company}}).",
+    "permissions": "Kaelah pourra lire et modifier le contenu et les métadonnées SEO de ce site, selon les autorisations que tu accordes. Tu peux déconnecter à tout moment depuis les Paramètres.",
+    "authorize": "Autoriser la connexion",
+    "invalidLink": "Ce lien de connexion est invalide ou incomplet. Relance l'installation depuis le plugin.",
+    "backToSettings": "Retour aux paramètres",
+    "genericError": "Une erreur est survenue pendant l'autorisation."
+  },
+  "landing": {
+    "hero": {
+      "badge": "Propulsé par FANASINA Michael",
+      "title": "Votre commerce piloté par une <1>intelligence artificielle</1>.",
+      "subtitle": "Kaelah analyse, optimise et automatise votre activité e-commerce depuis une simple conversation.",
+      "ctaPrimary": "Commencer gratuitement",
+      "ctaSecondary": "Découvrir Kaelah",
+      "statValue": "+24% conversion",
+      "statLabel": "Optimisé par Kaelah"
+    },
+    "demo": {
+      "userMessage": "Kaelah, analyse ma boutique Shopify.",
+      "aiMessage": "Voici votre analyse sur les 30 derniers jours :",
+      "revenue": "Chiffre d'affaires",
+      "orders": "Commandes",
+      "conversion": "Conversion"
+    },
+    "how": {
+      "eyebrow": "Fonctionnement",
+      "title": "Comment ça marche",
+      "subtitle": "Trois étapes pour passer du pilotage manuel à l'automatisation IA.",
+      "steps": [
+        { "title": "Connectez vos outils", "desc": "Reliez Shopify, WordPress, Drupal, WooCommerce et plus encore en un clic." },
+        { "title": "Discutez avec Kaelah", "desc": "Posez vos questions en langage naturel. Kaelah comprend et agit." },
+        { "title": "Automatisez", "desc": "Kaelah propose des actions. Vous confirmez. C'est appliqué." }
+      ]
+    },
+    "features": {
+      "eyebrow": "Capacités IA",
+      "title": "Tout ce que Kaelah peut faire",
+      "subtitle": "Une intelligence spécialisée pour chaque aspect de votre e-commerce."
+    },
+    "solutions": {
+      "eyebrow": "Plateformes compatibles",
+      "title": "Connectez votre écosystème",
+      "subtitle": "Kaelah s'intègre aux outils que vous utilisez déjà."
+    },
+    "pricing": {
+      "eyebrow": "Tarifs",
+      "title": "Des plans pour chaque ambition",
+      "subtitle": "Commencez gratuitement. Évoluez quand vous êtes prêt.",
+      "popular": "Le plus populaire"
+    },
+    "cta": {
+      "title": "Prêt à piloter votre commerce avec l'IA ?",
+      "subtitle": "Rejoignez les e-commerçants qui utilisent Kaelah dès aujourd'hui.",
+      "button": "Commencer gratuitement"
+    },
+    "footer": {
+      "tagline": "Votre commerce, augmenté par l'intelligence artificielle.",
+      "columns": {
+        "product": { "title": "Produit", "links": ["Fonctionnalités", "Tarifs", "Plateformes"] },
+        "company": { "title": "Entreprise", "links": ["À propos", "Blog", "Contact"] },
+        "legal": { "title": "Légal", "links": ["Confidentialité", "CGU", "Mentions légales"] }
+      },
+      "copyright": "© 2026 Kaelah AI. Tous droits réservés."
+    }
+  },
+  "about": {
+    "title": "À propos de Kaelah AI",
+    "subtitle": "Une intelligence artificielle conçue pour les e-commerçants, par un développeur passionné.",
+    "storyHeading": "Notre histoire",
+    "story": "Kaelah AI est né d'une conviction simple : les e-commerçants indépendants méritent les mêmes outils d'intelligence artificielle que les grandes plateformes. Conçu et développé par FANASINA Michael, Kaelah combine analyse de données, automatisation et conversation naturelle pour donner à chaque boutique en ligne un copilote IA accessible et abordable.",
+    "missionHeading": "Notre mission",
+    "mission": "Simplifier la gestion e-commerce en automatisant les tâches répétitives — SEO, service client, analyse de ventes — pour que les commerçants puissent se concentrer sur ce qui compte vraiment : leurs produits et leurs clients.",
+    "founderRole": "Créateur & Développeur",
+    "ctaTitle": "Envie d'en savoir plus ?",
+    "ctaButton": "Nous contacter"
+  },
+  "contact": {
+    "title": "Contactez-nous",
+    "subtitle": "Une question, un projet ? Écrivez-nous, nous répondons sous 24h.",
+    "form": {
+      "name": "Nom complet",
+      "namePlaceholder": "Jean Dupont",
+      "email": "Email",
+      "emailPlaceholder": "vous@entreprise.com",
+      "subject": "Sujet",
+      "subjectPlaceholder": "Comment pouvons-nous vous aider ?",
+      "message": "Message",
+      "messagePlaceholder": "Décrivez votre demande...",
+      "submit": "Envoyer le message",
+      "sending": "Envoi en cours...",
+      "success": "Message envoyé ! Nous vous répondrons rapidement."
+    },
+    "directHeading": "Ou contactez-nous directement",
+    "directEmail": "contact@kaelah.ai"
+  },
+  "blog": {
+    "title": "Blog Kaelah AI",
+    "subtitle": "Conseils, tendances et actualités pour propulser votre e-commerce.",
+    "readMore": "Lire l'article",
+    "backToBlog": "Retour au blog",
+    "notFound": "Article introuvable."
+  },
+  "legal": {
+    "privacy": {
+      "title": "Politique de confidentialité",
+      "intro": "Cette politique explique quelles données Kaelah AI collecte, comment elles sont utilisées, et quels sont vos droits.",
+      "sections": [
+        { "heading": "Données collectées", "body": "Nous collectons les informations que vous nous fournissez directement (nom, email, données de votre boutique connectée) ainsi que des données d'usage anonymisées pour améliorer le service." },
+        { "heading": "Utilisation des données", "body": "Vos données servent exclusivement à faire fonctionner Kaelah AI : analyser votre activité, générer des réponses pertinentes et sécuriser votre compte. Elles ne sont jamais vendues à des tiers." },
+        { "heading": "Partage des données", "body": "Vos données ne sont partagées qu'avec les connecteurs que vous activez vous-même (Shopify, WordPress, etc.) et nos sous-traitants techniques, sous obligation de confidentialité." },
+        { "heading": "Cookies", "body": "Nous utilisons des cookies essentiels au fonctionnement du site et des cookies de mesure d'audience anonymisés. Vous pouvez les désactiver dans les paramètres de votre navigateur." },
+        { "heading": "Vos droits", "body": "Vous pouvez à tout moment demander l'accès, la rectification ou la suppression de vos données personnelles en nous contactant." },
+        { "heading": "Contact", "body": "Pour toute question relative à vos données, écrivez-nous à privacy@kaelah.ai." }
+      ]
+    },
+    "terms": {
+      "title": "Conditions Générales d'Utilisation",
+      "intro": "En utilisant Kaelah AI, vous acceptez les présentes conditions générales d'utilisation.",
+      "sections": [
+        { "heading": "Objet", "body": "Les présentes CGU encadrent l'accès et l'utilisation du service Kaelah AI, assistant e-commerce propulsé par l'intelligence artificielle." },
+        { "heading": "Compte utilisateur", "body": "Vous êtes responsable de la confidentialité de vos identifiants et de toute activité effectuée depuis votre compte." },
+        { "heading": "Utilisation du service", "body": "Le service doit être utilisé conformément à la loi. Toute tentative de contournement, d'ingénierie inverse ou d'usage abusif entraîne la suspension du compte." },
+        { "heading": "Propriété intellectuelle", "body": "Kaelah AI, son nom, son logo et ses contenus sont la propriété exclusive de leur créateur. Toute reproduction sans autorisation est interdite." },
+        { "heading": "Responsabilité", "body": "Kaelah AI est fourni « en l'état ». Les recommandations générées par l'IA restent sous la responsabilité de l'utilisateur, qui doit vérifier les informations avant application." },
+        { "heading": "Résiliation", "body": "Vous pouvez résilier votre abonnement à tout moment depuis les paramètres de votre compte. Nous nous réservons le droit de suspendre tout compte en violation des présentes CGU." },
+        { "heading": "Droit applicable", "body": "Les présentes CGU sont régies par le droit malagasy. Tout litige sera soumis à la compétence exclusive des tribunaux de Madagascar." }
+      ]
+    },
+    "notice": {
+      "title": "Mentions légales",
+      "sections": [
+        { "heading": "Éditeur du site", "body": "Le site Kaelah AI est édité par FANASINA Michael, entrepreneur individuel basé à Madagascar. Contact : contact@kaelah.ai." },
+        { "heading": "Hébergement", "body": "Informations d'hébergement disponibles sur demande auprès de l'éditeur." },
+        { "heading": "Propriété intellectuelle", "body": "L'ensemble des contenus présents sur ce site (textes, visuels, marque Kaelah AI) est protégé. Toute reproduction, même partielle, est soumise à autorisation préalable." },
+        { "heading": "Droit applicable", "body": "Le présent site est soumis au droit malagasy. En cas de litige, les tribunaux malgaches compétents seront seuls saisis." }
+      ]
+    }
+  },
+  "mock": {
+    "suggestedPrompts": {
+      "shopAnalysis": "Analyse boutique Shopify",
+      "seoAudit": "Optimisation SEO",
+      "clientMessages": "Messages clients",
+      "salesAnalysis": "Analyse commerciale"
+    },
+    "plans": {
+      "starter": {
+        "name": "Starter",
+        "description": "Pour démarrer avec l'IA",
+        "features": ["500 messages IA / mois", "1 connecteur", "Analyse SEO de base", "Support email"],
+        "cta": "Choisir Starter"
+      },
+      "pro": {
+        "name": "Pro",
+        "description": "Pour les e-commerçants actifs",
+        "features": ["5 000 messages IA / mois", "3 connecteurs", "Analyse SEO avancée", "Automatisations", "Support prioritaire"],
+        "cta": "Choisir Pro"
+      },
+      "business": {
+        "name": "Business",
+        "description": "Pour les équipes et agences",
+        "features": ["Messages illimités", "Tous les connecteurs", "Multi-boutiques", "API & Webhooks", "Account manager dédié"],
+        "cta": "Choisir Business"
+      }
+    },
+    "aiCapabilities": {
+      "analytics": { "title": "Analyse commerciale", "desc": "Chiffre d'affaires, conversion, best-sellers en temps réel." },
+      "seo": { "title": "Optimisation SEO & GEO", "desc": "Audit technique, balises, contenu local et recherche IA." },
+      "service": { "title": "Optimisation GEO", "desc": "Résumés, questions/réponses et données structurées pour être cité par les IA génératives." },
+      "automation": { "title": "Automatisation", "desc": "Workflows déclenchés par la conversation." },
+      "products": { "title": "Optimisation produits", "desc": "Titres, descriptions, images ALT en masse." },
+      "recommendations": { "title": "Recommandations IA", "desc": "Suggestions contextuelles basées sur vos données." }
+    },
+    "businessTypes": {
+      "ecommerce": { "label": "E-commerce", "desc": "Boutique en ligne" },
+      "agency": { "label": "Agence", "desc": "Prestation de services" },
+      "company": { "label": "Entreprise", "desc": "Société traditionnelle" }
+    },
+    "aiResponseCard": {
+      "analyticsHeading": "Analyse commerciale",
+      "seoHeading": "Audit SEO",
+      "productsHeading": "Produits analysés",
+      "seoScoreLabel": "Score SEO",
+      "issuesDetected": "{{count}} problèmes détectés",
+      "recommendedActions": "Actions recommandées",
+      "stats": { "revenue": "Chiffre d'affaires", "orders": "Commandes", "products": "Produits", "conversion": "Conversion" },
+      "aiSuggestion": "Suggestion IA"
+    },
+    "upload": {
+      "dropzone": "Cliquez pour parcourir",
+      "dropzoneSuffix": "ou glissez vos fichiers",
+      "types": "Images · PDF · CSV · Documents",
+      "uploading": "Téléversement en cours...",
+      "success": "Upload terminé",
+      "error": "Erreur lors de l'upload"
+    },
+    "faq": {
+      "shopifySync": {
+        "question": "Comment synchroniser plusieurs comptes Shopify ?",
+        "answer": "Vous pouvez ajouter jusqu'à 5 boutiques Shopify sur le plan Pro. Allez dans la section Connecteurs, cliquez sur \"Ajouter\" et suivez le processus d'authentification pour chaque boutique."
+      },
+      "apiLimits": {
+        "question": "Quelles sont les limites du support API ?",
+        "answer": "L'API supporte actuellement les requêtes REST standard avec une limite de 1000 appels par heure pour le plan Pro. Pour des besoins plus élevés, contactez notre équipe commerciale."
+      }
+    },
+    "blog": {
+      "seoTrends2026": {
+        "title": "Les tendances SEO à surveiller en 2026",
+        "excerpt": "Recherche IA, contenu conversationnel, E-E-A-T : voici ce qui va redéfinir le référencement cette année.",
+        "date": "15 janvier 2026",
+        "readTime": "6 min de lecture",
+        "content": [
+          "La recherche évolue plus vite que jamais. Avec l'essor des moteurs conversationnels et des résumés générés par IA, le SEO traditionnel ne suffit plus : il faut désormais optimiser pour être cité par une IA, pas seulement classé dans une liste de liens.",
+          "Le contenu conversationnel prend le pas sur les mots-clés isolés. Les moteurs de recherche modernes comprennent l'intention derrière une question complète — structurez vos fiches produits et vos articles comme des réponses claires à de vraies questions clients.",
+          "L'E-E-A-T (Expérience, Expertise, Autorité, Fiabilité) devient central. Les avis vérifiés, les auteurs identifiés et les données structurées renforcent la confiance que les moteurs — et les IA — accordent à votre site.",
+          "Enfin, la vitesse et l'accessibilité mobile restent non négociables. Un site lent perd des positions même avec un excellent contenu. Kaelah audite automatiquement ces trois piliers pour prioriser vos actions."
+        ]
+      },
+      "aiCommerce": {
+        "title": "Comment l'IA transforme le e-commerce indépendant",
+        "excerpt": "Des chatbots aux recommandations personnalisées, l'intelligence artificielle n'est plus réservée aux grandes enseignes.",
+        "date": "3 février 2026",
+        "readTime": "5 min de lecture",
+        "content": [
+          "Pendant longtemps, l'intelligence artificielle est restée l'apanage des géants du e-commerce disposant d'équipes data dédiées. Ce n'est plus le cas : des outils comme Kaelah rendent ces capacités accessibles à toute boutique, en quelques clics.",
+          "Réponses automatiques aux clients, génération de fiches produits optimisées, détection des tendances de vente : l'IA prend en charge les tâches répétitives pour que les commerçants se concentrent sur leur offre et leur relation client.",
+          "La vraie transformation n'est pas seulement l'automatisation, mais la personnalisation à grande échelle : chaque client peut recevoir une réponse ou une recommandation adaptée à son historique, sans effort manuel supplémentaire.",
+          "Les boutiques qui adoptent ces outils tôt gagnent un avantage de productivité mesurable — moins de temps sur l'administratif, plus de temps sur la croissance."
+        ]
+      },
+      "shopifyAutomation": {
+        "title": "Automatiser sa boutique Shopify : le guide complet",
+        "excerpt": "Gagnez des heures chaque semaine en automatisant vos fiches produits, votre support client et vos rapports de vente.",
+        "date": "20 février 2026",
+        "readTime": "7 min de lecture",
+        "content": [
+          "Automatiser sa boutique Shopify ne veut pas dire perdre le contrôle — au contraire. Bien configurée, l'automatisation libère du temps pour les décisions stratégiques en prenant en charge les tâches répétitives.",
+          "Commencez par les fiches produits : titres SEO, descriptions et balises ALT peuvent être générés et optimisés en masse, avec une relecture humaine avant publication pour garder la main sur la qualité.",
+          "Côté support client, un premier niveau de réponse automatisé sur les questions fréquentes (livraison, retours, disponibilité) libère un temps précieux tout en gardant une escalade humaine pour les cas complexes.",
+          "Enfin, des rapports de vente générés automatiquement chaque semaine permettent de repérer les tendances sans avoir à ouvrir un tableau de bord tous les jours. Connectez simplement votre boutique à Kaelah pour démarrer."
+        ]
+      }
+    }
+  }
+}

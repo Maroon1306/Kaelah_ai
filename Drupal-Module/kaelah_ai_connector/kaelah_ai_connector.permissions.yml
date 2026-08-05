@@ -1,0 +1,4 @@
+administer kaelah ai connector:
+  title: 'Administer Kaelah AI Connector'
+  description: 'Connect or disconnect this site from Kaelah AI.'
+  restrict access: true
