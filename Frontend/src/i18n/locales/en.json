@@ -134,7 +134,7 @@
       "recentActions": "Recent actions",
       "upgradeTitle": "Level up",
       "upgradeDesc": "Unlock full automation for your product listings.",
-      "upgradeButton": "Upgrade Pro"
+      "upgradeButton": "Upgrade to {{plan}}"
     }
   },
   "settings": {

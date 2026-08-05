@@ -134,14 +134,14 @@ export default function ContextPanel() {
         </div>
       )}
 
-      {/* Upgrade banner */}
+      {/* Upgrade banner — always targets the next tier up, never a stale "Pro" label for Pro users */}
       {company?.plan !== 'business' && (
         <div className="mt-auto relative overflow-hidden bg-gradient-ai rounded-2xl p-5">
           <div className="absolute -right-4 -top-4 w-24 h-24 bg-white/10 rounded-full blur-2xl pointer-events-none" />
           <h4 className="text-white font-bold mb-2 relative z-10">{t('chat.contextPanel.upgradeTitle')}</h4>
           <p className="text-white/80 text-[11px] mb-4 relative z-10">{t('chat.contextPanel.upgradeDesc')}</p>
           <button className="focus-ring w-full bg-white text-primary font-bold py-2 rounded-lg text-xs hover:scale-105 transition-transform relative z-10" onClick={() => navigate('/settings?tab=billing')}>
-            {t('chat.contextPanel.upgradeButton')}
+            {t('chat.contextPanel.upgradeButton', { plan: t(`billing.planNames.${company?.plan === 'pro' ? 'business' : 'pro'}`) })}
           </button>
         </div>
       )}

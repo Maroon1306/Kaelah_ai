@@ -134,7 +134,7 @@
       "recentActions": "Actions récentes",
       "upgradeTitle": "Passez au niveau supérieur",
       "upgradeDesc": "Accédez à l'automatisation complète de vos fiches produits.",
-      "upgradeButton": "Upgrade Pro"
+      "upgradeButton": "Passer au forfait {{plan}}"
     }
   },
   "settings": {

@@ -74,30 +74,42 @@ export default function Sidebar({ open, onClose }) {
     <>
       {open && <div className="md:hidden fixed inset-0 bg-black/50 z-[199]" onClick={onClose} />}
       <aside id="app-sidebar" className={`
-        w-[260px] ${collapsed ? 'md:w-[76px]' : 'md:w-[260px]'} flex-shrink-0 glass border-r border-border flex flex-col min-h-0 h-screen md:h-screen
+        w-[260px] ${collapsed ? 'md:w-20' : 'md:w-[260px]'} flex-shrink-0 glass border-r border-border flex flex-col min-h-0 h-screen md:h-screen
         fixed md:static z-[200] transition-[transform,width] duration-300
         ${open ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
       `}>
-        <div className={`flex items-center px-5 py-4 ${collapsed ? 'md:justify-center md:px-0' : 'justify-between'}`}>
-          <Link to="/chat" className={`focus-ring flex items-center gap-2 rounded-lg ${collapsed ? 'md:hidden' : ''}`}>
+        {/* Header: mobile + expanded-desktop layout (logo/brand left, close/collapse toggle right) */}
+        <div className={`flex items-center justify-between gap-2 px-5 py-4 ${collapsed ? 'md:hidden' : ''}`}>
+          <Link to="/chat" className="focus-ring flex items-center gap-2 rounded-lg min-w-0">
             <KaelahLogo size={28} />
-            <span className="text-base font-bold tracking-tight">{t('common.brand')}<span className="text-accent">{t('common.brandSuffix')}</span></span>
+            <span className="text-base font-bold tracking-tight truncate">{t('common.brand')}<span className="text-accent">{t('common.brandSuffix')}</span></span>
           </Link>
-          <Link to="/chat" className={`focus-ring hidden ${collapsed ? 'md:flex' : 'md:hidden'} items-center justify-center rounded-lg`}>
-            <KaelahLogo size={28} />
-          </Link>
-          <button className="focus-ring md:hidden w-8 h-8 flex items-center justify-center rounded-lg text-on-muted" onClick={onClose} aria-label={t('common.closeMenu')}><X size={18} /></button>
+          <button className="focus-ring md:hidden w-8 h-8 flex-shrink-0 flex items-center justify-center rounded-lg text-on-muted" onClick={onClose} aria-label={t('common.closeMenu')}><X size={18} /></button>
           <button
             className="focus-ring hidden md:flex w-8 h-8 flex-shrink-0 items-center justify-center rounded-lg text-on-muted hover:bg-surface-4 hover:text-on-surface transition-colors"
-            onClick={() => setCollapsed((v) => !v)}
-            aria-label={collapsed ? t('sidebar.expand') : t('sidebar.collapse')}
+            onClick={() => setCollapsed(true)}
+            aria-label={t('sidebar.collapse')}
           >
-            {collapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
+            <PanelLeftClose size={18} />
           </button>
         </div>
 
-        <button className={`focus-ring mx-4 mb-4 flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-gradient-ai text-white text-sm font-medium hover:shadow-glow hover:-translate-y-px transition-all ${collapsed ? 'md:mx-auto md:w-11 md:h-11 md:p-0 md:justify-center' : ''}`} onClick={() => navigate('/chat')} aria-label={t('sidebar.newConversation')}>
-          <Plus size={16} /><span className={collapsed ? 'md:hidden' : ''}>{t('sidebar.newConversation')}</span>
+        {/* Header: collapsed-desktop layout — logo and toggle stacked, never side-by-side in a narrow rail */}
+        {collapsed && (
+          <div className="hidden md:flex flex-col items-center gap-2 pt-4 pb-2">
+            <Link to="/chat" className="focus-ring w-11 h-11 flex items-center justify-center rounded-lg"><KaelahLogo size={26} /></Link>
+            <button
+              className="focus-ring w-9 h-9 flex items-center justify-center rounded-lg text-on-muted hover:bg-surface-4 hover:text-on-surface transition-colors"
+              onClick={() => setCollapsed(false)}
+              aria-label={t('sidebar.expand')}
+            >
+              <PanelLeftOpen size={17} />
+            </button>
+          </div>
+        )}
+
+        <button className={`focus-ring flex items-center gap-2 rounded-xl bg-gradient-ai text-white text-sm font-medium hover:shadow-glow hover:-translate-y-px transition-all ${collapsed ? 'md:w-11 md:h-11 md:p-0 md:justify-center md:mx-auto mx-4 mb-4 px-3.5 py-2.5' : 'mx-4 mb-4 px-3.5 py-2.5'}`} onClick={() => navigate('/chat')} aria-label={t('sidebar.newConversation')}>
+          <Plus size={16} className="flex-shrink-0" /><span className={collapsed ? 'md:hidden' : ''}>{t('sidebar.newConversation')}</span>
         </button>
 
         <div className={`px-4 pb-4 ${collapsed ? 'md:hidden' : ''}`}>
