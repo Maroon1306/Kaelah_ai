@@ -114,7 +114,7 @@ export default function Sidebar({ open, onClose }) {
 
         <div className={`px-4 pb-4 ${collapsed ? 'md:hidden' : ''}`}>
           <span className="block px-1 mb-2 text-[11px] font-semibold uppercase tracking-wider text-on-muted">{t('sidebar.suggestions')}</span>
-          {suggestedPrompts.map((prompt) => {
+          {suggestedPrompts.slice(0, 3).map((prompt) => {
             const Icon = iconMap[prompt.icon] || MessageSquare
             return (
               <button key={prompt.id} className="focus-ring w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] text-on-muted hover:bg-surface-4 hover:text-on-surface transition-colors text-left" onClick={() => navigate('/chat')}>

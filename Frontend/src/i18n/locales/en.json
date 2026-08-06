@@ -170,7 +170,13 @@
     "notifications": {
       "heading": "Notifications",
       "email": { "label": "Email notifications", "desc": "Receive alerts by email" },
-      "push": { "label": "Push notifications", "desc": "Real-time alerts in your browser" },
+      "push": {
+        "label": "Push notifications",
+        "desc": "Real-time alerts in your browser",
+        "unsupported": "Not supported by this browser",
+        "notConfigured": "Push notifications aren't configured on the server.",
+        "error": "Couldn't enable push notifications."
+      },
       "weekly": { "label": "Weekly report", "desc": "Summary of your activity every Monday" }
     },
     "security": {
@@ -188,6 +194,9 @@
     "team": {
       "heading": "Team",
       "invite": "Invite",
+      "inviteEmail": "Colleague's email",
+      "sendInvite": "Send invite",
+      "pending": "Pending",
       "comingSoon": "Coming soon",
       "columns": { "member": "Member", "role": "Role", "lastActive": "Last active" },
       "roles": { "admin": "Admin", "collaborator": "Collaborator", "analyst": "Analyst" }
@@ -269,6 +278,15 @@
     "invalidLink": "This connection link is invalid or incomplete. Restart the install from the plugin.",
     "backToSettings": "Back to settings",
     "genericError": "Something went wrong during authorization."
+  },
+  "teamAccept": {
+    "loading": "Validating your invite...",
+    "successTitle": "Welcome to the team!",
+    "successDesc": "You now have access to your team's Kaelah AI workspace.",
+    "goToChat": "Go to chat",
+    "backToApp": "Back to the app",
+    "invalidLink": "This invite link is invalid or incomplete.",
+    "genericError": "Something went wrong validating this invite."
   },
   "landing": {
     "hero": {
