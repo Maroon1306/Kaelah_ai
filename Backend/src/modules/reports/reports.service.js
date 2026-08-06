@@ -1,6 +1,7 @@
 import { pool } from '../../db/pool.js'
 import { sendMail } from '../../utils/mailer.js'
 import { analyzeUrl, analyzeGeoUrl } from '../seo/seo.service.js'
+import { sendPushToCompany } from '../notifications/push.service.js'
 
 /**
  * Best-effort homepage URL for a connector, derived from whatever was
@@ -95,13 +96,24 @@ function renderReportHtml(report, companyName) {
 
 export async function sendWeeklyReport(companyId) {
   const { rows } = await pool.query(
-    `SELECT c.company_name, u.email FROM companies c JOIN users u ON u.id = c.user_id WHERE c.id = $1`,
+    `SELECT c.company_name, c.notification_prefs, u.email FROM companies c JOIN users u ON u.id = c.user_id WHERE c.id = $1`,
     [companyId]
   )
   if (rows.length === 0) return { sent: false, reason: 'company_not_found' }
 
   const report = await generateWeeklyReport(companyId)
-  const html = renderReportHtml(report, rows[0].company_name)
-  const result = await sendMail({ to: rows[0].email, subject: 'Votre rapport hebdomadaire Kaelah AI', html })
+
+  let result = { sent: false, reason: 'weekly_notifications_disabled' }
+  if (rows[0].notification_prefs?.weekly !== false) {
+    const html = renderReportHtml(report, rows[0].company_name)
+    result = await sendMail({ to: rows[0].email, subject: 'Votre rapport hebdomadaire Kaelah AI', html })
+  }
+
+  await sendPushToCompany(companyId, {
+    title: 'Rapport hebdomadaire disponible',
+    body: `${report.actions.applied} action(s) appliquée(s) cette semaine sur ${report.connectorsCount} connecteur(s).`,
+    url: '/chat',
+  })
+
   return { ...result, report }
 }

@@ -77,6 +77,9 @@ export const api = {
 
   // Team
   getTeam: () => request('/team'),
+  inviteTeamMember: (email, role) => post('/team/invite', { email, role }),
+  acceptTeamInvite: (token) => post('/team/accept', { token }),
+  removeTeamMember: (id) => del(`/team/${id}`),
 
   // Conversations & chat
   getConversations: () => request('/conversations'),
@@ -122,6 +125,12 @@ export const api = {
   getInvoices: () => request('/billing/invoices'),
   createCheckoutSession: (planId) => post('/billing/checkout', { planId }),
   createPortalSession: () => post('/billing/portal'),
+
+  // Push notifications
+  getPushPublicKey: () => request('/notifications/push/public-key'),
+  subscribePush: (subscription) => post('/notifications/push/subscribe', { subscription }),
+  unsubscribePush: (endpoint) => post('/notifications/push/unsubscribe', { endpoint }),
+  testPush: () => post('/notifications/push/test'),
 
   // Uploads
   uploadFile: (file) => {

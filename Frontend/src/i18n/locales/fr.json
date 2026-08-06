@@ -134,7 +134,7 @@
       "recentActions": "Actions récentes",
       "upgradeTitle": "Passez au niveau supérieur",
       "upgradeDesc": "Accédez à l'automatisation complète de vos fiches produits.",
-      "upgradeButton": "Upgrade Pro"
+      "upgradeButton": "Passer au forfait {{plan}}"
     }
   },
   "settings": {
@@ -170,7 +170,13 @@
     "notifications": {
       "heading": "Notifications",
       "email": { "label": "Notifications email", "desc": "Recevoir les alertes par email" },
-      "push": { "label": "Notifications push", "desc": "Alertes en temps réel sur votre navigateur" },
+      "push": {
+        "label": "Notifications push",
+        "desc": "Alertes en temps réel sur votre navigateur",
+        "unsupported": "Non supporté par ce navigateur",
+        "notConfigured": "Les notifications push ne sont pas configurées côté serveur.",
+        "error": "Impossible d'activer les notifications push."
+      },
       "weekly": { "label": "Rapport hebdomadaire", "desc": "Synthèse de votre activité chaque lundi" }
     },
     "security": {
@@ -188,6 +194,9 @@
     "team": {
       "heading": "Équipe",
       "invite": "Inviter",
+      "inviteEmail": "Email du ou de la collègue",
+      "sendInvite": "Envoyer l'invitation",
+      "pending": "En attente",
       "comingSoon": "Bientôt disponible",
       "columns": { "member": "Membre", "role": "Rôle", "lastActive": "Dernière activité" },
       "roles": { "admin": "Admin", "collaborator": "Collaborateur", "analyst": "Analyste" }
@@ -269,6 +278,15 @@
     "invalidLink": "Ce lien de connexion est invalide ou incomplet. Relance l'installation depuis le plugin.",
     "backToSettings": "Retour aux paramètres",
     "genericError": "Une erreur est survenue pendant l'autorisation."
+  },
+  "teamAccept": {
+    "loading": "Validation de ton invitation...",
+    "successTitle": "Bienvenue dans l'équipe !",
+    "successDesc": "Tu as maintenant accès à l'espace Kaelah AI de ton équipe.",
+    "goToChat": "Aller au chat",
+    "backToApp": "Retour à l'application",
+    "invalidLink": "Ce lien d'invitation est invalide ou incomplet.",
+    "genericError": "Une erreur est survenue pendant la validation de l'invitation."
   },
   "landing": {
     "hero": {

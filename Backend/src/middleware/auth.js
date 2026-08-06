@@ -9,12 +9,26 @@ export async function requireAuth(req, res, next) {
 
   try {
     const payload = verifyAccessToken(token)
+    // A user resolves to the company they own, or — if they own none — the
+    // company they've accepted a team invite for (see team.routes.js).
     const { rows } = await pool.query(
-      `SELECT u.id, u.full_name, u.email, u.avatar, u.email_verified, c.id AS company_id, c.company_name, c.company_type,
-              c.language, c.timezone, c.plan, c.stripe_customer_id, c.stripe_subscription_id, c.subscription_status,
-              c.notification_prefs, c.ai_preferences
+      `SELECT u.id, u.full_name, u.email, u.avatar, u.email_verified,
+              COALESCE(owned.id, member_co.id) AS company_id,
+              COALESCE(owned.company_name, member_co.company_name) AS company_name,
+              COALESCE(owned.company_type, member_co.company_type) AS company_type,
+              COALESCE(owned.language, member_co.language) AS language,
+              COALESCE(owned.timezone, member_co.timezone) AS timezone,
+              COALESCE(owned.plan, member_co.plan) AS plan,
+              COALESCE(owned.stripe_customer_id, member_co.stripe_customer_id) AS stripe_customer_id,
+              COALESCE(owned.stripe_subscription_id, member_co.stripe_subscription_id) AS stripe_subscription_id,
+              COALESCE(owned.subscription_status, member_co.subscription_status) AS subscription_status,
+              COALESCE(owned.notification_prefs, member_co.notification_prefs) AS notification_prefs,
+              COALESCE(owned.ai_preferences, member_co.ai_preferences) AS ai_preferences,
+              CASE WHEN owned.id IS NOT NULL THEN 'admin' ELSE member.role END AS member_role
        FROM users u
-       LEFT JOIN companies c ON c.user_id = u.id
+       LEFT JOIN companies owned ON owned.user_id = u.id
+       LEFT JOIN company_members member ON member.user_id = u.id AND member.status = 'active' AND owned.id IS NULL
+       LEFT JOIN companies member_co ON member_co.id = member.company_id
        WHERE u.id = $1`,
       [payload.sub]
     )
@@ -35,6 +49,7 @@ export async function requireAuth(req, res, next) {
           subscriptionStatus: row.subscription_status,
           notificationPrefs: row.notification_prefs,
           aiPreferences: row.ai_preferences,
+          role: row.member_role,
         }
       : null
     next()

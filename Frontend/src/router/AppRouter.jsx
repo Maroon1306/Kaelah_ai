@@ -17,6 +17,7 @@ import Terms from '../pages/Terms'
 import LegalNotice from '../pages/LegalNotice'
 import ConnectAuthorize from '../pages/ConnectAuthorize'
 import ConnectClaim from '../pages/ConnectClaim'
+import TeamAccept from '../pages/TeamAccept'
 
 export default function AppRouter() {
   return (
@@ -39,6 +40,7 @@ export default function AppRouter() {
           <Route path="/connect/bigcommerce" element={<ProtectedRoute><ConnectClaim provider="bigcommerce" /></ProtectedRoute>} />
           <Route path="/connect/prestashop" element={<ProtectedRoute><ConnectAuthorize provider="prestashop" /></ProtectedRoute>} />
           <Route path="/connect/wix" element={<ProtectedRoute><ConnectClaim provider="wix" /></ProtectedRoute>} />
+          <Route path="/team/accept" element={<ProtectedRoute><TeamAccept /></ProtectedRoute>} />
           <Route path="/chat" element={<ProtectedRoute><MainLayout><Chat /></MainLayout></ProtectedRoute>} />
           <Route path="/chat/:conversationId" element={<ProtectedRoute><MainLayout><Chat /></MainLayout></ProtectedRoute>} />
           <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />

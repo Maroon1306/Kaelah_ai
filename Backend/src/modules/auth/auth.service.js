@@ -153,6 +153,19 @@ export async function verifyEmailOtp(userId, code, purpose = 'verify_email') {
 }
 
 export async function getCompanyForUser(userId) {
-  const { rows } = await pool.query('SELECT id, company_name, company_type, language, timezone, plan FROM companies WHERE user_id = $1', [userId])
-  return rows[0] || null
+  const { rows } = await pool.query(
+    `SELECT COALESCE(owned.id, member_co.id) AS id,
+            COALESCE(owned.company_name, member_co.company_name) AS company_name,
+            COALESCE(owned.company_type, member_co.company_type) AS company_type,
+            COALESCE(owned.language, member_co.language) AS language,
+            COALESCE(owned.timezone, member_co.timezone) AS timezone,
+            COALESCE(owned.plan, member_co.plan) AS plan
+     FROM users u
+     LEFT JOIN companies owned ON owned.user_id = u.id
+     LEFT JOIN company_members member ON member.user_id = u.id AND member.status = 'active' AND owned.id IS NULL
+     LEFT JOIN companies member_co ON member_co.id = member.company_id
+     WHERE u.id = $1`,
+    [userId]
+  )
+  return rows[0]?.id ? rows[0] : null
 }

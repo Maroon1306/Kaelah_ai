@@ -16,6 +16,7 @@ import { webhooksRouter } from './modules/webhooks/webhooks.routes.js'
 import { uploadsRouter } from './modules/uploads/uploads.routes.js'
 import { reportsRouter } from './modules/reports/reports.routes.js'
 import { agentRouter } from './modules/agent/agent.routes.js'
+import { notificationsRouter } from './modules/notifications/push.routes.js'
 
 export const app = express()
 
@@ -47,6 +48,7 @@ app.use('/api/billing', billingRouter)
 app.use('/api/uploads', uploadsRouter)
 app.use('/api/reports', reportsRouter)
 app.use('/api/agent', agentRouter)
+app.use('/api/notifications', notificationsRouter)
 
 app.use((req, res) => res.status(404).json({ error: 'Route introuvable.' }))
 app.use(errorHandler)
