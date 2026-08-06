@@ -93,20 +93,6 @@ export default function ContextPanel() {
         </div>
       </div>
 
-      {/* Upgrade banner — the most important thing here, kept right at the top so
-          it's never pushed below the fold by connectors/recent actions; always
-          targets the actual next tier up, never a stale "Pro" label for Pro users */}
-      {company?.plan !== 'business' && (
-        <div className="relative overflow-hidden bg-gradient-ai rounded-2xl p-5 flex-shrink-0">
-          <div className="absolute -right-4 -top-4 w-24 h-24 bg-white/10 rounded-full blur-2xl pointer-events-none" />
-          <h4 className="text-white font-bold mb-2 relative z-10">{t('chat.contextPanel.upgradeTitle')}</h4>
-          <p className="text-white/80 text-[11px] mb-4 relative z-10">{t('chat.contextPanel.upgradeDesc')}</p>
-          <button className="focus-ring w-full bg-white text-primary font-bold py-2 rounded-lg text-xs hover:scale-105 transition-transform relative z-10" onClick={() => navigate('/settings?tab=billing')}>
-            {t('chat.contextPanel.upgradeButton', { plan: t(`billing.planNames.${company?.plan === 'pro' ? 'business' : 'pro'}`) })}
-          </button>
-        </div>
-      )}
-
       {/* Connected platforms */}
       <div>
         <h3 className="text-[11px] font-semibold uppercase tracking-wide text-on-muted mb-3">{t('chat.contextPanel.platforms')}</h3>
@@ -130,12 +116,13 @@ export default function ContextPanel() {
         </div>
       </div>
 
-      {/* Recent actions — capped at 3, this is a glance-level summary not a full log */}
-      {recentActions.length > 0 && (
+      {/* Recent actions — capped at 2 and dropped entirely once there are 3+
+          connectors, so it never crowds out the upgrade banner below */}
+      {recentActions.length > 0 && connectors.length < 3 && (
         <div>
           <h3 className="text-[11px] font-semibold uppercase tracking-wide text-on-muted mb-3">{t('chat.contextPanel.recentActions')}</h3>
           <div className="flex flex-col gap-3">
-            {recentActions.slice(0, 3).map((action) => (
+            {recentActions.slice(0, 2).map((action) => (
               <div key={action.id} className="flex gap-3">
                 <div className={`w-0.5 rounded-full flex-shrink-0 ${action.status === 'executed' ? 'bg-success' : action.status === 'failed' ? 'bg-error' : 'bg-primary-dim'}`} />
                 <div className="flex flex-col gap-0.5">
@@ -145,6 +132,19 @@ export default function ContextPanel() {
               </div>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* Upgrade banner — always targets the next tier up, never a stale
+          "Pro" label for Pro users */}
+      {company?.plan !== 'business' && (
+        <div className="mt-auto relative overflow-hidden bg-gradient-ai rounded-2xl p-5 flex-shrink-0">
+          <div className="absolute -right-4 -top-4 w-24 h-24 bg-white/10 rounded-full blur-2xl pointer-events-none" />
+          <h4 className="text-white font-bold mb-2 relative z-10">{t('chat.contextPanel.upgradeTitle')}</h4>
+          <p className="text-white/80 text-[11px] mb-4 relative z-10">{t('chat.contextPanel.upgradeDesc')}</p>
+          <button className="focus-ring w-full bg-white text-primary font-bold py-2 rounded-lg text-xs hover:scale-105 transition-transform relative z-10" onClick={() => navigate('/settings?tab=billing')}>
+            {t('chat.contextPanel.upgradeButton', { plan: t(`billing.planNames.${company?.plan === 'pro' ? 'business' : 'pro'}`) })}
+          </button>
         </div>
       )}
     </aside>
