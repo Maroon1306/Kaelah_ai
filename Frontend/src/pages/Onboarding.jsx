@@ -1,29 +1,50 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Building2, ShoppingBag, Briefcase, ArrowRight, ArrowLeft, Check, AlertCircle } from 'lucide-react'
+import { Building2, ShoppingBag, Briefcase, ArrowRight, ArrowLeft, Check, AlertCircle, Loader2 } from 'lucide-react'
 import Button from '../components/Button'
 import KaelahLogo from '../components/KaelahLogo'
 import { useAuth } from '../context/AuthContext'
+import { useToast } from '../context/ToastContext'
 import { api } from '../services/api'
+import { getPaddle, setPaddleEventHandler } from '../utils/paddle'
+import { PROVIDER_META } from '../data/providerMeta'
 import { businessTypes } from '../data/mockData'
 
 const iconMap = { ShoppingBag, Building2, Briefcase }
 const REDIRECT_SECONDS = 3
+const SUBSCRIPTION_POLL_MS = 1500
+const SUBSCRIPTION_POLL_ATTEMPTS = 10
 
 export default function Onboarding() {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const { refreshProfile } = useAuth()
+  const { company, refreshProfile } = useAuth()
+  const showToast = useToast()
   const [step, setStep] = useState(0)
   const [companyName, setCompanyName] = useState('')
   const [businessType, setBusinessType] = useState('')
   const [countdown, setCountdown] = useState(REDIRECT_SECONDS)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+  const [plans, setPlans] = useState([])
+  const [pendingPlan, setPendingPlan] = useState(null)
+  const [finalizing, setFinalizing] = useState(false)
 
-  const steps = [t('onboarding.steps.welcome'), t('onboarding.steps.company'), t('onboarding.steps.activity'), t('onboarding.steps.done')]
+  // Every plan, including Starter, requires a real Paddle payment — a
+  // company only reaches "done" (and the chat interface) once its
+  // subscription is active. Someone who already paid and lands back here
+  // (e.g. stale tab) skips straight past the plan step.
+  const steps = [t('onboarding.steps.welcome'), t('onboarding.steps.company'), t('onboarding.steps.activity'), t('onboarding.steps.plan'), t('onboarding.steps.done')]
   const canProceed = step === 0 || (step === 1 && companyName.trim()) || (step === 2 && businessType)
+
+  useEffect(() => {
+    api.getPlans().then(({ plans }) => setPlans(plans)).catch(() => {})
+  }, [])
+
+  useEffect(() => {
+    if (company?.subscriptionStatus === 'active' && step === 3) setStep(4)
+  }, [company, step])
 
   const goToNext = () => {
     const pending = sessionStorage.getItem('kaelah_redirect_after_auth')
@@ -50,8 +71,51 @@ export default function Onboarding() {
     }
   }
 
+  // Polls after checkout.completed: the webhook that flips
+  // subscriptionStatus to 'active' lands a moment after Paddle's own
+  // confirmation, so a single refreshProfile() right away can still show
+  // the old state.
+  const waitForActiveSubscription = async () => {
+    setFinalizing(true)
+    for (let i = 0; i < SUBSCRIPTION_POLL_ATTEMPTS; i++) {
+      const { company: fresh } = await api.getProfile()
+      if (fresh?.subscriptionStatus === 'active') {
+        await refreshProfile()
+        setFinalizing(false)
+        setStep(4)
+        return
+      }
+      await new Promise((r) => setTimeout(r, SUBSCRIPTION_POLL_MS))
+    }
+    setFinalizing(false)
+    showToast(t('onboarding.plan.stillProcessing'), 'info')
+  }
+
+  const handleChoosePlan = async (planId) => {
+    setPendingPlan(planId)
+    setError('')
+    try {
+      const config = await api.getCheckoutConfig(planId)
+      const Paddle = await getPaddle(config)
+      setPaddleEventHandler((event) => {
+        if (event.name === 'checkout.completed') waitForActiveSubscription()
+        if (event.name === 'checkout.error') showToast(t('billing.notConfigured'), 'error')
+      })
+      Paddle.Checkout.open({
+        items: [{ priceId: config.priceId, quantity: 1 }],
+        customer: { email: config.customerEmail },
+        customData: { companyId: config.companyId },
+        settings: { successUrl: `${window.location.origin}/onboarding` },
+      })
+    } catch (err) {
+      setError(err.message || t('billing.notConfigured'))
+    } finally {
+      setPendingPlan(null)
+    }
+  }
+
   useEffect(() => {
-    if (step !== 3) return
+    if (step !== 4) return
     setCountdown(REDIRECT_SECONDS)
     const interval = setInterval(() => {
       setCountdown((c) => {
@@ -60,13 +124,14 @@ export default function Onboarding() {
       })
     }, 1000)
     return () => clearInterval(interval)
-  }, [step, navigate])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step])
 
   return (
     <div className="min-h-screen flex items-center justify-center p-6 bg-bg relative overflow-hidden">
       <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-gradient-radial-primary rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-gradient-radial-accent rounded-full blur-3xl pointer-events-none" />
-      <div className="w-full max-w-[560px] relative z-10">
+      <div className={`w-full relative z-10 ${step === 3 ? 'max-w-[900px]' : 'max-w-[560px]'}`}>
         {/* Progress dots */}
         <div className="flex justify-center gap-2 mb-8">
           {steps.map((label, i) => (
@@ -122,6 +187,41 @@ export default function Onboarding() {
           )}
 
           {step === 3 && (
+            <div className="flex flex-col items-center text-center animate-fade-in">
+              <h1 className="text-2xl font-bold tracking-tight">{t('onboarding.plan.title')}</h1>
+              <p className="text-sm text-on-muted mt-2 max-w-md">{t('onboarding.plan.subtitle')}</p>
+
+              {finalizing ? (
+                <div className="flex flex-col items-center gap-3 py-12">
+                  <Loader2 size={28} className="animate-spin text-primary" />
+                  <p className="text-sm text-on-muted">{t('onboarding.plan.finalizing')}</p>
+                </div>
+              ) : (
+                <div className="grid sm:grid-cols-3 gap-4 w-full mt-6">
+                  {plans.map((plan) => (
+                    <div key={plan.id} className="card-base p-5 pt-6 flex flex-col gap-3 text-left">
+                      <h3 className="text-base font-semibold">{t(`mock.plans.${plan.id}.name`)}</h3>
+                      <div className="flex items-baseline gap-1"><span className="text-2xl font-bold tracking-tight">{plan.price}€</span><span className="text-on-muted text-xs">/mois</span></div>
+                      {plan.providers?.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5">
+                          {plan.providers.slice(0, 4).map((p) => {
+                            const meta = PROVIDER_META[p]
+                            if (!meta) return null
+                            const Icon = meta.icon
+                            return <span key={p} title={meta.name} className="w-6 h-6 flex items-center justify-center rounded-md bg-surface-3 border border-border flex-shrink-0"><Icon size={12} style={{ color: meta.color }} /></span>
+                          })}
+                          {plan.providers.length > 4 && <span className="text-[10px] text-on-dim self-center">+{plan.providers.length - 4}</span>}
+                        </div>
+                      )}
+                      <Button variant="ai" className="w-full mt-1" loading={pendingPlan === plan.id} onClick={() => handleChoosePlan(plan.id)}>{t('onboarding.plan.choose')}</Button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {step === 4 && (
             <div className="flex flex-col items-center text-center animate-fade-in min-h-[200px] justify-center">
               <div className="relative w-20 h-20 flex items-center justify-center rounded-full bg-success-dim text-success mb-4">
                 <Check size={32} />

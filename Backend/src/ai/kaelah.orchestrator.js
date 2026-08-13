@@ -69,9 +69,16 @@ function buildCardsFromToolResults(toolResults) {
   return cards
 }
 
-export async function handleChatMessage({ companyId, plan, autoActions = false, conversationId, text }) {
+export async function handleChatMessage({ companyId, plan, subscriptionStatus, autoActions = false, conversationId, text }) {
   const client = getOpenAIClient()
   if (!client) throw new HttpError(503, "OPENAI_API_KEY n'est pas configurée côté serveur — le chat ne peut pas répondre pour le moment.")
+
+  // Every plan requires an active paid subscription — the frontend already
+  // keeps unpaid accounts out of /chat entirely, this is defense-in-depth
+  // for anyone hitting the API directly.
+  if (subscriptionStatus !== 'active') {
+    throw new HttpError(402, "Ton compte n'a pas encore de forfait actif. Choisis et paie un forfait dans Paramètres > Facturation pour commencer à discuter avec Kaelah.")
+  }
 
   let conversation
   if (conversationId) {

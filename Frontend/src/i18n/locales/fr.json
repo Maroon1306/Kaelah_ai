@@ -63,11 +63,18 @@
     }
   },
   "onboarding": {
-    "steps": { "welcome": "Bienvenue", "company": "Entreprise", "activity": "Activité", "done": "Terminé" },
-    "step0": { "title": "Bienvenue dans Kaelah AI", "subtitle": "Votre assistant IA spécialisé pour le e-commerce. Configurons votre espace en 3 étapes." },
+    "steps": { "welcome": "Bienvenue", "company": "Entreprise", "activity": "Activité", "plan": "Forfait", "done": "Terminé" },
+    "step0": { "title": "Bienvenue dans Kaelah AI", "subtitle": "Votre assistant IA spécialisé pour le e-commerce. Configurons votre espace en quelques étapes." },
     "step1": { "title": "Nom de votre entreprise", "subtitle": "Comment s'appelle votre boutique ou société ?", "placeholder": "Ma Boutique" },
     "step2": { "title": "Type d'activité", "subtitle": "Quel est votre profil ?" },
     "step3": { "title": "Tout est prêt !", "subtitleWithName": "Bienvenue, {{name}}. Kaelah est prêt à piloter votre commerce.", "subtitle": "Kaelah est prêt à piloter votre commerce." },
+    "plan": {
+      "title": "Choisissez votre forfait",
+      "subtitle": "Un dernier pas : choisissez le forfait qui vous convient pour activer votre espace Kaelah AI.",
+      "choose": "Choisir",
+      "finalizing": "Finalisation de votre abonnement...",
+      "stillProcessing": "Le paiement est en cours de traitement, ça peut prendre quelques instants de plus. Rafraîchissez la page dans un moment."
+    },
     "back": "Retour",
     "continue": "Continuer",
     "goToChat": "Accéder au chat",

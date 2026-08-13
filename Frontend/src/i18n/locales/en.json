@@ -63,11 +63,18 @@
     }
   },
   "onboarding": {
-    "steps": { "welcome": "Welcome", "company": "Company", "activity": "Activity", "done": "Done" },
-    "step0": { "title": "Welcome to Kaelah AI", "subtitle": "Your specialized AI assistant for e-commerce. Let's set up your workspace in 3 steps." },
+    "steps": { "welcome": "Welcome", "company": "Company", "activity": "Activity", "plan": "Plan", "done": "Done" },
+    "step0": { "title": "Welcome to Kaelah AI", "subtitle": "Your specialized AI assistant for e-commerce. Let's set up your workspace in a few steps." },
     "step1": { "title": "Your company name", "subtitle": "What's your store or company called?", "placeholder": "My Store" },
     "step2": { "title": "Type of activity", "subtitle": "What's your profile?" },
     "step3": { "title": "All set!", "subtitleWithName": "Welcome, {{name}}. Kaelah is ready to run your business.", "subtitle": "Kaelah is ready to run your business." },
+    "plan": {
+      "title": "Choose your plan",
+      "subtitle": "One last step: pick the plan that fits to activate your Kaelah AI workspace.",
+      "choose": "Choose",
+      "finalizing": "Finalizing your subscription...",
+      "stillProcessing": "Your payment is still processing, it can take a bit longer. Refresh the page in a moment."
+    },
     "back": "Back",
     "continue": "Continue",
     "goToChat": "Go to chat",

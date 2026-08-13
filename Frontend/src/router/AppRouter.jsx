@@ -38,16 +38,16 @@ export default function AppRouter() {
           <Route path="/legal" element={<LegalNotice />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
+          <Route path="/onboarding" element={<ProtectedRoute requireSubscription={false}><Onboarding /></ProtectedRoute>} />
           <Route path="/connect/wordpress" element={<ProtectedRoute><ConnectAuthorize provider="wordpress" /></ProtectedRoute>} />
           <Route path="/connect/drupal" element={<ProtectedRoute><ConnectAuthorize provider="drupal" /></ProtectedRoute>} />
           <Route path="/connect/bigcommerce" element={<ProtectedRoute><ConnectClaim provider="bigcommerce" /></ProtectedRoute>} />
           <Route path="/connect/prestashop" element={<ProtectedRoute><ConnectAuthorize provider="prestashop" /></ProtectedRoute>} />
           <Route path="/connect/wix" element={<ProtectedRoute><ConnectClaim provider="wix" /></ProtectedRoute>} />
-          <Route path="/team/accept" element={<ProtectedRoute><TeamAccept /></ProtectedRoute>} />
+          <Route path="/team/accept" element={<ProtectedRoute requireSubscription={false}><TeamAccept /></ProtectedRoute>} />
           <Route path="/chat" element={<ProtectedRoute><MainLayout><Chat /></MainLayout></ProtectedRoute>} />
           <Route path="/chat/:conversationId" element={<ProtectedRoute><MainLayout><Chat /></MainLayout></ProtectedRoute>} />
-          <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+          <Route path="/settings" element={<ProtectedRoute requireSubscription={false}><Settings /></ProtectedRoute>} />
           <Route path="/billing" element={<Navigate to="/settings?tab=billing" replace />} />
           <Route path="/connectors" element={<Navigate to="/settings?tab=connectors" replace />} />
           <Route path="/profile" element={<Navigate to="/settings?tab=account" replace />} />

@@ -2,8 +2,15 @@ import { Navigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import KaelahLogo from './KaelahLogo'
 
-export default function ProtectedRoute({ children }) {
-  const { isAuthenticated, loading } = useAuth()
+/**
+ * `requireSubscription` (default true) sends anyone without an active paid
+ * plan back to onboarding's plan step instead of the requested page — every
+ * plan, including Starter, requires payment, so nothing past onboarding is
+ * reachable until that's done. Settings and onboarding itself opt out
+ * (settings so a lapsed subscriber can still reach Billing to fix it).
+ */
+export default function ProtectedRoute({ children, requireSubscription = true }) {
+  const { isAuthenticated, loading, company } = useAuth()
   const location = useLocation()
 
   if (loading) {
@@ -15,6 +22,7 @@ export default function ProtectedRoute({ children }) {
   }
 
   if (!isAuthenticated) return <Navigate to="/login" state={{ from: location }} replace />
+  if (requireSubscription && company && company.subscriptionStatus !== 'active') return <Navigate to="/onboarding" replace />
 
   return children
 }

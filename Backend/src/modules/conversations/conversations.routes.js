@@ -31,7 +31,7 @@ chatRouter.post('/', asyncHandler(async (req, res) => {
   if (!message || !message.trim()) throw new HttpError(400, 'Un message est requis.')
   if (!req.company) throw new HttpError(400, 'Aucune entreprise associée à ce compte.')
 
-  const result = await handleChatMessage({ companyId: req.company.id, plan: req.company.plan, autoActions: !!req.company.aiPreferences?.autoActions, conversationId, text: message })
+  const result = await handleChatMessage({ companyId: req.company.id, plan: req.company.plan, subscriptionStatus: req.company.subscriptionStatus, autoActions: !!req.company.aiPreferences?.autoActions, conversationId, text: message })
   res.json(result)
 }))
 
