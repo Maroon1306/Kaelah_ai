@@ -29,11 +29,18 @@ async function request(path, options = {}) {
   if (!(options.body instanceof FormData)) headers['Content-Type'] = 'application/json'
   if (token) headers.Authorization = `Bearer ${token}`
 
-  const res = await fetch(`${BASE_URL}${path}`, {
-    credentials: 'include',
-    ...options,
-    headers,
-  })
+  let res
+  try {
+    res = await fetch(`${BASE_URL}${path}`, {
+      credentials: 'include',
+      ...options,
+      headers,
+    })
+  } catch {
+    // fetch() itself throws for DNS/offline/CORS failures — before there's
+    // any response to read a status or JSON body from.
+    throw new ApiError(0, 'Impossible de contacter le serveur. Vérifie ta connexion internet et réessaie.')
+  }
 
   if (res.status === 204) return null
 
@@ -41,7 +48,9 @@ async function request(path, options = {}) {
   const data = isJson ? await res.json() : await res.text()
 
   if (!res.ok) {
-    const message = (isJson && data?.error) || `Erreur API (${res.status})`
+    const message = (isJson && data?.error) || (res.status >= 500
+      ? 'Une erreur est survenue sur le serveur. Réessaie dans un instant.'
+      : 'Une erreur est survenue. Réessaie.')
     throw new ApiError(res.status, message)
   }
 

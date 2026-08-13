@@ -3,6 +3,8 @@ import { useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Check, Link2, Loader2, ShoppingBag, FileText, Layers, Store, Package, Globe, Search, AlertCircle } from 'lucide-react'
 import Button from '../Button'
+import Modal from '../Modal'
+import { useToast } from '../../context/ToastContext'
 import { api } from '../../services/api'
 
 const PROVIDER_META = {
@@ -28,9 +30,12 @@ const PLUGIN_MARKETPLACE_URL = {
 export default function ConnectorsTab() {
   const { t } = useTranslation()
   const [searchParams] = useSearchParams()
+  const showToast = useToast()
   const [connectors, setConnectors] = useState([])
   const [loading, setLoading] = useState(true)
   const [connecting, setConnecting] = useState(null)
+  const [shopifyModalOpen, setShopifyModalOpen] = useState(false)
+  const [shopDomain, setShopDomain] = useState('')
 
   const notice = searchParams.get('connected') ? { type: 'success', provider: searchParams.get('connected') } : searchParams.get('error') ? { type: 'error', provider: searchParams.get('error') } : null
 
@@ -52,16 +57,7 @@ export default function ConnectorsTab() {
 
   const handleConnect = async (provider) => {
     if (provider === 'shopify') {
-      const shop = window.prompt(t('connectors.shopifyPrompt'))
-      if (!shop) return
-      setConnecting(provider)
-      try {
-        const { url } = await api.getShopifyInstallUrl(shop.trim())
-        window.location.href = url
-      } catch (err) {
-        window.alert(err.message)
-        setConnecting(null)
-      }
+      setShopifyModalOpen(true)
       return
     }
     if (PLUGIN_MARKETPLACE_URL[provider]) {
@@ -78,15 +74,36 @@ export default function ConnectorsTab() {
             : await api.getGoogleSearchConsoleInstallUrl()
         window.location.href = url
       } catch (err) {
-        window.alert(err.message)
+        showToast(err.message, 'error')
         setConnecting(null)
       }
     }
   }
 
+  const handleShopifyConnect = async (e) => {
+    e.preventDefault()
+    if (!shopDomain.trim()) return
+    setShopifyModalOpen(false)
+    setConnecting('shopify')
+    try {
+      const { url } = await api.getShopifyInstallUrl(shopDomain.trim())
+      window.location.href = url
+    } catch (err) {
+      showToast(err.message, 'error')
+      setConnecting(null)
+    } finally {
+      setShopDomain('')
+    }
+  }
+
   const handleDisconnect = async (provider) => {
-    await api.disconnectConnector(provider)
-    loadConnectors()
+    try {
+      await api.disconnectConnector(provider)
+      loadConnectors()
+      showToast(t('connectors.disconnectSuccess', { name: PROVIDER_META[provider]?.name || provider }), 'success')
+    } catch (err) {
+      showToast(err.message, 'error')
+    }
   }
 
   return (
@@ -133,6 +150,13 @@ export default function ConnectorsTab() {
           })}
         </div>
       )}
+
+      <Modal open={shopifyModalOpen} onClose={() => setShopifyModalOpen(false)} title={t('connectors.shopifyPrompt')} size="sm">
+        <form onSubmit={handleShopifyConnect} className="flex flex-col gap-4">
+          <input type="text" required autoFocus className="input-field" placeholder="ma-boutique.myshopify.com" value={shopDomain} onChange={(e) => setShopDomain(e.target.value)} />
+          <Button type="submit" variant="primary" className="w-full" disabled={!shopDomain.trim()}>{t('connectors.connect')}</Button>
+        </form>
+      </Modal>
     </>
   )
 }

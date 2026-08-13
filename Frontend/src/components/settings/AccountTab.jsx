@@ -4,12 +4,14 @@ import { useTranslation } from 'react-i18next'
 import { Sparkles, Mail, Building, Zap, TrendingUp, Plug, AlertCircle, CheckCircle2 } from 'lucide-react'
 import Button from '../Button'
 import { useAuth } from '../../context/AuthContext'
+import { useConfirm } from '../../context/ConfirmContext'
 import { api } from '../../services/api'
 
 export default function AccountTab() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { user, company, refreshProfile, logout } = useAuth()
+  const confirm = useConfirm()
 
   const [usage, setUsage] = useState(null)
   const [fullName, setFullName] = useState(user?.fullName || '')
@@ -54,7 +56,14 @@ export default function AccountTab() {
   }
 
   const handleDelete = async () => {
-    if (!window.confirm(t('profile.dangerZone.confirm'))) return
+    const ok = await confirm({
+      title: t('profile.dangerZone.heading'),
+      message: t('profile.dangerZone.confirm'),
+      confirmLabel: t('profile.dangerZone.delete'),
+      cancelLabel: t('common.cancel'),
+      danger: true,
+    })
+    if (!ok) return
     setDeleting(true)
     try {
       await api.deleteAccount()

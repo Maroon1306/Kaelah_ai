@@ -263,6 +263,7 @@
     "shopifyPrompt": "Your Shopify store domain (e.g. mystore.myshopify.com)",
     "connectSuccess": "{{name}} was connected successfully.",
     "connectError": "Connecting to {{name}} failed. Please try again.",
+    "disconnectSuccess": "{{name}} was disconnected.",
     "fields": {
       "siteUrl": "Site URL",
       "consumerKey": "Consumer Key",

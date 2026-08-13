@@ -140,8 +140,9 @@ export default function BillingTab() {
                         if (!meta) return null
                         const Icon = meta.icon
                         return (
-                          <span key={p} title={meta.name} className="w-7 h-7 flex items-center justify-center rounded-lg bg-surface-3 border border-border flex-shrink-0">
-                            <Icon size={14} style={{ color: meta.color }} />
+                          <span key={p} className="flex items-center gap-1.5 pl-1.5 pr-2.5 py-1 rounded-lg bg-surface-3 border border-border">
+                            <Icon size={13} style={{ color: meta.color }} className="flex-shrink-0" />
+                            <span className="text-[11px] font-medium">{meta.name}</span>
                           </span>
                         )
                       })}

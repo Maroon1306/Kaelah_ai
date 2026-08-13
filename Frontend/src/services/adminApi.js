@@ -22,14 +22,21 @@ async function request(path, options = {}) {
   const headers = { 'Content-Type': 'application/json', ...options.headers }
   if (token) headers.Authorization = `Bearer ${token}`
 
-  const res = await fetch(`${BASE_URL}${path}`, { ...options, headers })
+  let res
+  try {
+    res = await fetch(`${BASE_URL}${path}`, { ...options, headers })
+  } catch {
+    throw new ApiError(0, 'Impossible de contacter le serveur. Vérifie ta connexion internet et réessaie.')
+  }
   if (res.status === 204) return null
 
   const isJson = res.headers.get('content-type')?.includes('application/json')
   const data = isJson ? await res.json() : await res.text()
 
   if (!res.ok) {
-    const message = (isJson && data?.error) || `Erreur API (${res.status})`
+    const message = (isJson && data?.error) || (res.status >= 500
+      ? 'Une erreur est survenue sur le serveur. Réessaie dans un instant.'
+      : 'Une erreur est survenue. Réessaie.')
     throw new ApiError(res.status, message)
   }
   return data

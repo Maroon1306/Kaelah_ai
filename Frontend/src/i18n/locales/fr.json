@@ -263,6 +263,7 @@
     "shopifyPrompt": "Domaine de votre boutique Shopify (ex: maboutique.myshopify.com)",
     "connectSuccess": "{{name}} a été connecté avec succès.",
     "connectError": "La connexion à {{name}} a échoué. Réessayez.",
+    "disconnectSuccess": "{{name}} a été déconnecté.",
     "fields": {
       "siteUrl": "URL du site",
       "consumerKey": "Clé consommateur (Consumer Key)",
