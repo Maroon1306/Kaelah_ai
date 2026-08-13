@@ -9,6 +9,7 @@
     "migrate": "node src/db/migrate.js"
   },
   "dependencies": {
+    "@paddle/paddle-node-sdk": "^3.10.0",
     "axios": "^1.7.9",
     "bcrypt": "^5.1.1",
     "cheerio": "^1.0.0",
@@ -23,7 +24,6 @@
     "nodemailer": "^9.0.4",
     "openai": "^4.77.0",
     "pg": "^8.13.1",
-    "stripe": "^17.5.0",
     "web-push": "^3.6.7"
   }
 }

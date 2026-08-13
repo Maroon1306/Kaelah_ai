@@ -120,11 +120,12 @@ export const api = {
   updateAutomation: (id, data) => put(`/automations/${id}`, data),
   deleteAutomation: (id) => del(`/automations/${id}`),
 
-  // Billing
+  // Billing (Paddle)
   getPlans: () => request('/billing/plans'),
   getInvoices: () => request('/billing/invoices'),
-  createCheckoutSession: (planId) => post('/billing/checkout', { planId }),
-  createPortalSession: () => post('/billing/portal'),
+  getCheckoutConfig: (planId) => post('/billing/checkout', { planId }),
+  changePlan: (planId) => post('/billing/change-plan', { planId }),
+  getManagementUrl: () => post('/billing/portal'),
 
   // Push notifications
   getPushPublicKey: () => request('/notifications/push/public-key'),

@@ -4,6 +4,7 @@ import { Check, Download, Zap, Plug, AlertCircle } from 'lucide-react'
 import Button from '../Button'
 import { useAuth } from '../../context/AuthContext'
 import { api } from '../../services/api'
+import { getPaddle, setPaddleEventHandler } from '../../utils/paddle'
 
 export default function BillingTab() {
   const { t } = useTranslation()
@@ -33,8 +34,30 @@ export default function BillingTab() {
     setPendingPlan(planId)
     setError('')
     try {
-      const { url } = await api.createCheckoutSession(planId)
-      window.location.href = url
+      // Already subscribed: switch the existing Paddle subscription's price
+      // directly — no need to go through checkout again.
+      if (company?.paddleSubscriptionId) {
+        await api.changePlan(planId)
+        await refreshProfile()
+        setPendingPlan(null)
+        return
+      }
+
+      // First subscription: open the Paddle.js overlay checkout. The overlay
+      // itself is the loading/progress UI from here, so the button's own
+      // pending state ends as soon as it's open.
+      const config = await api.getCheckoutConfig(planId)
+      const Paddle = await getPaddle(config)
+      setPaddleEventHandler(async (event) => {
+        if (event.name === 'checkout.completed') await refreshProfile()
+        if (event.name === 'checkout.error') setError(t('billing.notConfigured'))
+      })
+      Paddle.Checkout.open({
+        items: [{ priceId: config.priceId, quantity: 1 }],
+        customer: { email: config.customerEmail },
+        customData: { companyId: config.companyId },
+      })
+      setPendingPlan(null)
     } catch (err) {
       setError(err.message || t('billing.notConfigured'))
       setPendingPlan(null)
@@ -44,8 +67,8 @@ export default function BillingTab() {
   const handleManageSubscription = async () => {
     setError('')
     try {
-      const { url } = await api.createPortalSession()
-      window.location.href = url
+      const { url } = await api.getManagementUrl()
+      if (url) window.location.href = url
     } catch (err) {
       setError(err.message || t('billing.notConfigured'))
     }

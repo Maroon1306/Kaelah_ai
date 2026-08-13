@@ -1,113 +1,126 @@
-import Stripe from 'stripe'
 import { pool } from '../../db/pool.js'
 import { HttpError } from '../../middleware/errorHandler.js'
-
-let stripeClient = null
-function getStripe() {
-  if (!process.env.STRIPE_SECRET_KEY) return null
-  if (!stripeClient) stripeClient = new Stripe(process.env.STRIPE_SECRET_KEY)
-  return stripeClient
-}
+import { getPaddle } from './paddle.client.js'
 
 export const PLAN_CATALOG = [
-  { id: 'starter', priceId: process.env.STRIPE_PRICE_STARTER, price: 29 },
-  { id: 'pro', priceId: process.env.STRIPE_PRICE_PRO, price: 79 },
-  { id: 'business', priceId: process.env.STRIPE_PRICE_BUSINESS, price: 199 },
+  { id: 'starter', priceId: process.env.PADDLE_PRICE_STARTER, price: 29 },
+  { id: 'pro', priceId: process.env.PADDLE_PRICE_PRO, price: 79 },
+  { id: 'business', priceId: process.env.PADDLE_PRICE_BUSINESS, price: 199 },
 ]
 
 function planForPriceId(priceId) {
   return PLAN_CATALOG.find((p) => p.priceId === priceId)?.id || 'starter'
 }
 
-export async function createCheckoutSession(company, userEmail, planId) {
-  const stripe = getStripe()
-  if (!stripe) throw new HttpError(503, "Stripe n'est pas configuré côté serveur (STRIPE_SECRET_KEY manquant).")
-
+/**
+ * Paddle checkout runs client-side via Paddle.js (the overlay), unlike
+ * Stripe's server-created redirect session — the backend just hands the
+ * frontend the price id and its own public client token.
+ */
+export function getCheckoutConfig(planId) {
   const plan = PLAN_CATALOG.find((p) => p.id === planId)
-  if (!plan || !plan.priceId) throw new HttpError(400, 'Plan invalide ou prix Stripe non configuré pour ce plan.')
+  if (!plan || !plan.priceId) throw new HttpError(400, 'Plan invalide ou prix Paddle non configuré pour ce plan.')
+  if (!process.env.PADDLE_CLIENT_TOKEN) throw new HttpError(503, "Paddle n'est pas configuré côté serveur (PADDLE_CLIENT_TOKEN manquant).")
 
-  let customerId = company.stripeCustomerId
-  if (!customerId) {
-    const customer = await stripe.customers.create({ email: userEmail, metadata: { companyId: company.id } })
-    customerId = customer.id
-    await pool.query('UPDATE companies SET stripe_customer_id = $1 WHERE id = $2', [customerId, company.id])
+  return {
+    priceId: plan.priceId,
+    clientToken: process.env.PADDLE_CLIENT_TOKEN,
+    environment: process.env.PADDLE_ENV === 'production' ? 'production' : 'sandbox',
   }
-
-  const session = await stripe.checkout.sessions.create({
-    mode: 'subscription',
-    customer: customerId,
-    line_items: [{ price: plan.priceId, quantity: 1 }],
-    success_url: `${process.env.FRONTEND_URL}/settings?tab=billing&checkout=success`,
-    cancel_url: `${process.env.FRONTEND_URL}/settings?tab=billing&checkout=cancelled`,
-  })
-  return session.url
 }
 
-export async function createPortalSession(company) {
-  const stripe = getStripe()
-  if (!stripe) throw new HttpError(503, "Stripe n'est pas configuré côté serveur.")
-  if (!company.stripeCustomerId) throw new HttpError(400, "Aucun abonnement Stripe actif pour cette entreprise.")
+/**
+ * A company that already has an active Paddle subscription changes plan by
+ * updating that subscription's price directly — no new checkout needed.
+ */
+export async function changePlan(company, planId) {
+  const paddle = getPaddle()
+  if (!paddle) throw new HttpError(503, "Paddle n'est pas configuré côté serveur.")
+  if (!company.paddleSubscriptionId) throw new HttpError(400, "Aucun abonnement Paddle actif — utilise le paiement pour t'abonner d'abord.")
 
-  const session = await stripe.billingPortal.sessions.create({
-    customer: company.stripeCustomerId,
-    return_url: `${process.env.FRONTEND_URL}/settings?tab=billing`,
+  const plan = PLAN_CATALOG.find((p) => p.id === planId)
+  if (!plan || !plan.priceId) throw new HttpError(400, 'Plan invalide ou prix Paddle non configuré pour ce plan.')
+
+  await paddle.subscriptions.update(company.paddleSubscriptionId, {
+    items: [{ priceId: plan.priceId, quantity: 1 }],
+    prorationBillingMode: 'prorated_immediately',
   })
-  return session.url
+}
+
+export async function getManagementUrl(company) {
+  const paddle = getPaddle()
+  if (!paddle) throw new HttpError(503, "Paddle n'est pas configuré côté serveur.")
+  if (!company.paddleSubscriptionId) throw new HttpError(400, 'Aucun abonnement Paddle actif pour cette entreprise.')
+
+  const subscription = await paddle.subscriptions.get(company.paddleSubscriptionId)
+  return subscription.managementUrls?.updatePaymentMethod || subscription.managementUrls?.cancel || null
 }
 
 export async function getInvoices(company) {
-  const stripe = getStripe()
-  if (!stripe || !company.stripeCustomerId) return []
-  const invoices = await stripe.invoices.list({ customer: company.stripeCustomerId, limit: 20 })
-  return invoices.data.map((inv) => ({
-    id: inv.id,
-    date: new Date(inv.created * 1000).toISOString(),
-    amount: (inv.amount_paid / 100).toFixed(2),
-    currency: inv.currency,
-    status: inv.status,
-    hostedUrl: inv.hosted_invoice_url,
-  }))
+  const paddle = getPaddle()
+  if (!paddle || !company.paddleCustomerId) return []
+
+  const transactions = paddle.transactions.list({ customerId: [company.paddleCustomerId], perPage: 20, status: ['completed', 'paid', 'billed', 'past_due'] })
+  const items = []
+  for await (const tx of transactions) {
+    let hostedUrl = null
+    try {
+      const pdf = await paddle.transactions.getInvoicePDF(tx.id)
+      hostedUrl = pdf.url
+    } catch {
+      // Not every transaction has an invoice (e.g. zero-value/trial) — skip the link, keep the row.
+    }
+    items.push({
+      id: tx.id,
+      date: tx.billedAt || tx.createdAt,
+      amount: tx.details?.totals?.total ? (Number(tx.details.totals.total) / 100).toFixed(2) : '0.00',
+      currency: tx.currencyCode,
+      status: tx.status === 'completed' || tx.status === 'paid' ? 'paid' : tx.status,
+      hostedUrl,
+    })
+  }
+  return items
 }
 
-export function constructWebhookEvent(rawBody, signature) {
-  const stripe = getStripe()
-  if (!stripe) throw new HttpError(503, "Stripe n'est pas configuré côté serveur.")
-  return stripe.webhooks.constructEvent(rawBody, signature, process.env.STRIPE_WEBHOOK_SECRET)
-}
-
-export async function applySubscriptionUpdate(subscription) {
-  const stripe = getStripe()
-  const priceId = subscription.items.data[0]?.price?.id
+async function applySubscriptionUpsert(subscription) {
+  const priceId = subscription.items?.[0]?.price?.id
   const plan = planForPriceId(priceId)
+  // First event for a subscription (subscription.created) only has the
+  // company id via customData; every later event (renewals, plan changes)
+  // matches by the subscription id already saved on the company row.
+  const companyId = subscription.customData?.companyId || null
+  const { rowCount } = await pool.query(
+    `UPDATE companies SET plan = $1, paddle_subscription_id = $2, paddle_customer_id = $3, subscription_status = $4
+     WHERE paddle_subscription_id = $2 OR id = $5`,
+    [plan, subscription.id, subscription.customerId, subscription.status, companyId]
+  )
+  if (rowCount === 0) {
+    console.error(`[paddle] Webhook pour l'abonnement ${subscription.id} : aucune entreprise correspondante (customData.companyId=${companyId}).`)
+  }
+}
+
+async function applySubscriptionCanceled(subscription) {
   await pool.query(
-    'UPDATE companies SET plan = $1, stripe_subscription_id = $2, subscription_status = $3 WHERE stripe_customer_id = $4',
-    [plan, subscription.id, subscription.status, subscription.customer]
+    "UPDATE companies SET plan = 'starter', subscription_status = 'canceled' WHERE paddle_subscription_id = $1",
+    [subscription.id]
   )
 }
 
-export async function applySubscriptionDeleted(subscription) {
-  await pool.query(
-    "UPDATE companies SET plan = 'starter', subscription_status = 'canceled' WHERE stripe_customer_id = $1",
-    [subscription.customer]
-  )
+export async function verifyAndParseWebhook(rawBody, signature) {
+  const paddle = getPaddle()
+  if (!paddle) throw new HttpError(503, "Paddle n'est pas configuré côté serveur.")
+  if (!process.env.PADDLE_WEBHOOK_SECRET) throw new HttpError(503, "PADDLE_WEBHOOK_SECRET manquant côté serveur.")
+  return paddle.webhooks.unmarshal(rawBody, process.env.PADDLE_WEBHOOK_SECRET, signature)
 }
 
 export async function handleWebhookEvent(event) {
-  switch (event.type) {
-    case 'checkout.session.completed': {
-      const stripe = getStripe()
-      const session = event.data.object
-      if (session.subscription) {
-        const subscription = await stripe.subscriptions.retrieve(session.subscription)
-        await applySubscriptionUpdate(subscription)
-      }
+  switch (event.eventType) {
+    case 'subscription.created':
+    case 'subscription.updated':
+      await applySubscriptionUpsert(event.data)
       break
-    }
-    case 'customer.subscription.updated':
-      await applySubscriptionUpdate(event.data.object)
-      break
-    case 'customer.subscription.deleted':
-      await applySubscriptionDeleted(event.data.object)
+    case 'subscription.canceled':
+      await applySubscriptionCanceled(event.data)
       break
     default:
       break
