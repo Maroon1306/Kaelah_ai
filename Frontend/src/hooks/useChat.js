@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../services/api'
+import { playNotificationSound } from '../utils/sound'
 
 function mapMessage(row) {
   return {
@@ -46,6 +47,7 @@ export function useChat(conversationId) {
       const response = await api.sendMessage(text, conversationId)
       clearTimeout(analyzingTimer)
       setMessages((prev) => [...prev, mapMessage(response.message)])
+      playNotificationSound()
       if (!conversationId) navigate(`/chat/${response.conversationId}`, { replace: true })
     } catch (err) {
       clearTimeout(analyzingTimer)

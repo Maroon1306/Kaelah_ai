@@ -6,6 +6,7 @@ import { getPlanLimits, planHasFeature } from '../config/plans.js'
 import { HttpError } from '../middleware/errorHandler.js'
 import * as conversations from '../modules/conversations/conversations.service.js'
 import * as actionsService from '../modules/conversations/actions.service.js'
+import { sendPushToCompany } from '../modules/notifications/push.service.js'
 
 async function getConnectedProviders(companyId) {
   const { rows } = await pool.query(
@@ -178,6 +179,15 @@ export async function handleChatMessage({ companyId, plan, subscriptionStatus, a
   }
 
   await conversations.touchConversation(conversation.id)
+
+  // Fire-and-forget: never let a push delivery hiccup slow down or fail the
+  // chat response itself. No-ops cleanly for anyone who hasn't subscribed.
+  const preview = (assistantMessage.content || '').slice(0, 120)
+  sendPushToCompany(companyId, {
+    title: 'Kaelah AI a répondu',
+    body: preview || 'Ta réponse est prête.',
+    url: `/chat/${conversation.id}`,
+  }).catch(() => {})
 
   return {
     conversationId: conversation.id,
