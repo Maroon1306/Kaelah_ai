@@ -234,6 +234,7 @@
     "usage": { "messages": "Messages IA", "automations": "Automatisations", "connectors": "Connecteurs" },
     "yourPlan": "Votre plan",
     "changePlanHeading": "Changer de plan",
+    "connectorsIncluded": "Connecteurs inclus",
     "invoicesHeading": "Factures",
     "noInvoices": "Aucune facture pour le moment.",
     "invoiceStatus": { "paid": "Payée", "open": "En attente" },

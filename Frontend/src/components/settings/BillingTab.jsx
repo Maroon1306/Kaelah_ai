@@ -5,6 +5,7 @@ import Button from '../Button'
 import { useAuth } from '../../context/AuthContext'
 import { api } from '../../services/api'
 import { getPaddle, setPaddleEventHandler } from '../../utils/paddle'
+import { PROVIDER_META } from '../../data/providerMeta'
 
 export default function BillingTab() {
   const { t } = useTranslation()
@@ -56,6 +57,7 @@ export default function BillingTab() {
         items: [{ priceId: config.priceId, quantity: 1 }],
         customer: { email: config.customerEmail },
         customData: { companyId: config.companyId },
+        settings: { successUrl: `${window.location.origin}/settings?tab=billing&checkout=success` },
       })
       setPendingPlan(null)
     } catch (err) {
@@ -129,6 +131,23 @@ export default function BillingTab() {
                 <ul className="flex flex-col gap-2">
                   {features.map((f, i) => <li key={i} className="flex items-center gap-2 text-sm"><Check size={14} className="text-accent" />{f}</li>)}
                 </ul>
+                {plan.providers?.length > 0 && (
+                  <div className="flex flex-col gap-2 pt-2 border-t border-border">
+                    <span className="text-[11px] font-semibold uppercase tracking-wide text-on-muted">{t('billing.connectorsIncluded')}</span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {plan.providers.map((p) => {
+                        const meta = PROVIDER_META[p]
+                        if (!meta) return null
+                        const Icon = meta.icon
+                        return (
+                          <span key={p} title={meta.name} className="w-7 h-7 flex items-center justify-center rounded-lg bg-surface-3 border border-border flex-shrink-0">
+                            <Icon size={14} style={{ color: meta.color }} />
+                          </span>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )}
                 <Button
                   variant={isCurrent ? 'secondary' : 'ai'}
                   className="w-full"

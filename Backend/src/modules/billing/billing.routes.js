@@ -2,13 +2,28 @@ import { Router } from 'express'
 import { asyncHandler } from '../../utils/asyncHandler.js'
 import { requireAuth } from '../../middleware/auth.js'
 import { HttpError } from '../../middleware/errorHandler.js'
+import { getPlanLimits } from '../../config/plans.js'
 import * as billingService from './billing.service.js'
 
 export const billingRouter = Router()
 export const billingWebhookRouter = Router()
 
+const ALL_PROVIDERS = ['shopify', 'wordpress', 'drupal', 'bigcommerce', 'prestashop', 'wix', 'google_search_console']
+
 billingRouter.get('/plans', (req, res) => {
-  res.json({ plans: billingService.PLAN_CATALOG.map(({ id, price }) => ({ id, price })) })
+  res.json({
+    plans: billingService.PLAN_CATALOG.map(({ id, price }) => {
+      const limits = getPlanLimits(id)
+      return {
+        id,
+        price,
+        providers: limits.allowedProviders || ALL_PROVIDERS,
+        maxConnectors: limits.maxConnectors,
+        messagesPerMonth: limits.messagesPerMonth,
+        features: limits.features,
+      }
+    }),
+  })
 })
 
 billingRouter.use(requireAuth)

@@ -13,6 +13,7 @@ import Reveal from '../components/Reveal'
 import KaelahLogo from '../components/KaelahLogo'
 import { useInView } from '../hooks/useInView'
 import { aiCapabilities, platforms, plans } from '../data/mockData'
+import { PROVIDER_META } from '../data/providerMeta'
 
 const iconMap = { BarChart3, Search, MessageSquare, Zap, Package, Sparkles }
 const platformIcons = { ShoppingBag, FileText, Layers, ShoppingCart, Droplet, Search, Store, Package, Globe }
@@ -199,8 +200,8 @@ export default function Landing() {
               const features = t(`mock.plans.${plan.id}.features`, { returnObjects: true })
               return (
                 <Reveal key={plan.id} delay={i * 100}>
-                  <div className={`card-base p-7 flex flex-col gap-4 relative transition-transform ${plan.popular ? 'border-primary shadow-glow md:scale-105 z-10' : ''}`}>
-                    {plan.popular && <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-gradient-ai text-white text-[11px] font-semibold uppercase tracking-wide whitespace-nowrap">{t('landing.pricing.popular')}</div>}
+                  <div className={`card-base p-7 pt-9 flex flex-col gap-4 relative ${plan.popular ? 'border-primary shadow-glow z-10' : ''}`}>
+                    {plan.popular && <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-3 py-1 rounded-full bg-gradient-ai text-white text-[11px] font-semibold uppercase tracking-wide whitespace-nowrap shadow-glow-sm">{t('landing.pricing.popular')}</div>}
                     <h3 className="text-xl font-semibold">{t(`mock.plans.${plan.id}.name`)}</h3>
                     <p className="text-sm text-on-muted">{t(`mock.plans.${plan.id}.description`)}</p>
                     <div className="flex items-baseline gap-1">
@@ -212,6 +213,23 @@ export default function Landing() {
                         <li key={i} className="flex items-center gap-2 text-sm"><Check size={14} className="text-accent" />{f}</li>
                       ))}
                     </ul>
+                    {plan.providers?.length > 0 && (
+                      <div className="flex flex-col gap-2 pt-1 border-t border-border">
+                        <span className="text-[11px] font-semibold uppercase tracking-wide text-on-muted">{t('billing.connectorsIncluded')}</span>
+                        <div className="flex flex-wrap gap-1.5">
+                          {plan.providers.map((p) => {
+                            const meta = PROVIDER_META[p]
+                            if (!meta) return null
+                            const Icon = meta.icon
+                            return (
+                              <span key={p} title={meta.name} className="w-7 h-7 flex items-center justify-center rounded-lg bg-surface-3 border border-border flex-shrink-0">
+                                <Icon size={14} style={{ color: meta.color }} />
+                              </span>
+                            )
+                          })}
+                        </div>
+                      </div>
+                    )}
                     <Button variant={plan.popular ? 'ai' : 'secondary'} className="w-full" onClick={() => navigate('/register')}>
                       {t(`mock.plans.${plan.id}.cta`)}
                     </Button>

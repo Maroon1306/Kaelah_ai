@@ -39,10 +39,13 @@ export const businessTypes = [
 
 // Public pricing catalog for the (logged-out) Landing page. Real subscription
 // state (current plan, usage) is fetched from /api/billing and /api/profile.
+// providers here must stay in sync with PLAN_LIMITS.allowedProviders in
+// Backend/src/config/plans.js — this is the public marketing page, so it
+// can't call the authenticated /api/billing/plans endpoint.
 export const plans = [
-  { id: 'starter', price: '29', period: '/mois' },
-  { id: 'pro', price: '79', period: '/mois', popular: true },
-  { id: 'business', price: '199', period: '/mois' },
+  { id: 'starter', price: '29', period: '/mois', providers: ['wordpress', 'drupal', 'prestashop'] },
+  { id: 'pro', price: '79', period: '/mois', popular: true, providers: ['shopify', 'wordpress', 'drupal', 'bigcommerce', 'prestashop', 'wix', 'google_search_console'] },
+  { id: 'business', price: '199', period: '/mois', providers: ['shopify', 'wordpress', 'drupal', 'bigcommerce', 'prestashop', 'wix', 'google_search_console'] },
 ]
 
 export const faqItems = ['shopifySync', 'apiLimits']

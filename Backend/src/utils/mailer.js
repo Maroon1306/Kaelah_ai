@@ -23,7 +23,7 @@ export async function sendMail({ to, subject, html, text }) {
   }
 
   await client.sendMail({
-    from: process.env.SMTP_FROM || process.env.SMTP_USER,
+    from: `Kaelah AI <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
     to,
     subject,
     html,

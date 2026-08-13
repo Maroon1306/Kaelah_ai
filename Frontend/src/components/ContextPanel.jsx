@@ -1,19 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Store, ShoppingBag, FileText, Layers, Package, Globe, Search, Check, PanelRightClose, PanelRightOpen } from 'lucide-react'
+import { Store, Check, PanelRightClose, PanelRightOpen } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { api } from '../services/api'
-
-const PROVIDER_META = {
-  shopify: { name: 'Shopify', icon: ShoppingBag, color: '#95BF47' },
-  wordpress: { name: 'WordPress/WooCommerce', icon: FileText, color: '#21759B' },
-  drupal: { name: 'Drupal', icon: Layers, color: '#0678BE' },
-  bigcommerce: { name: 'BigCommerce', icon: Store, color: '#34313F' },
-  prestashop: { name: 'PrestaShop', icon: Package, color: '#DF0067' },
-  wix: { name: 'Wix Stores', icon: Globe, color: '#0C6EFC' },
-  google_search_console: { name: 'Google Search Console', icon: Search, color: '#4285F4' },
-}
+import { PROVIDER_META } from '../data/providerMeta'
 
 const ACTION_LABELS = {
   update_shopify_product_seo: 'chat.actions.updateShopifyProductSeo',
