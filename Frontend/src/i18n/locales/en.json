@@ -271,6 +271,8 @@
     "connectSuccess": "{{name}} was connected successfully.",
     "connectError": "Connecting to {{name}} failed. Please try again.",
     "disconnectSuccess": "{{name}} was disconnected.",
+    "requiresPlan": "Requires the {{plan}} plan",
+    "upgradeToUnlock": "Unlock with {{plan}}",
     "fields": {
       "siteUrl": "Site URL",
       "consumerKey": "Consumer Key",

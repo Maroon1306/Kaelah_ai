@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Check, Link2, Loader2, ShoppingBag, FileText, Layers, Store, Package, Globe, Search, AlertCircle } from 'lucide-react'
+import { Check, Link2, Lock, Loader2, ShoppingBag, FileText, Layers, Store, Package, Globe, Search, AlertCircle } from 'lucide-react'
 import Button from '../Button'
 import Modal from '../Modal'
 import { useToast } from '../../context/ToastContext'
+import { useAuth } from '../../context/AuthContext'
 import { api } from '../../services/api'
 
 const PROVIDER_META = {
@@ -29,9 +30,12 @@ const PLUGIN_MARKETPLACE_URL = {
 
 export default function ConnectorsTab() {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const showToast = useToast()
+  const { company } = useAuth()
   const [connectors, setConnectors] = useState([])
+  const [plans, setPlans] = useState([])
   const [loading, setLoading] = useState(true)
   const [connecting, setConnecting] = useState(null)
   const [shopifyModalOpen, setShopifyModalOpen] = useState(false)
@@ -45,6 +49,12 @@ export default function ConnectorsTab() {
   }
 
   useEffect(() => { loadConnectors() }, [])
+  useEffect(() => { api.getPlans().then(({ plans }) => setPlans(plans)).catch(() => {}) }, [])
+
+  const currentPlanProviders = plans.find((p) => p.id === (company?.plan || 'starter'))?.providers || []
+  // The lowest-tier plan (in catalog order) that unlocks a given provider —
+  // shown on the lock badge so the user knows exactly what to upgrade to.
+  const requiredPlanFor = (provider) => plans.find((p) => p.providers?.includes(provider))?.id
 
   // While a WordPress (or Drupal) plugin install is in progress in another tab,
   // poll so the card flips to "Connecté" automatically once the handshake completes.
@@ -124,21 +134,35 @@ export default function ConnectorsTab() {
             if (!meta) return null
             const Icon = meta.icon
             const isConnected = connector.status === 'connected'
+            const isLocked = !isConnected && plans.length > 0 && !currentPlanProviders.includes(connector.provider)
+            const requiredPlan = isLocked ? requiredPlanFor(connector.provider) : null
             return (
-              <div key={connector.provider} className="card-base card-hover p-5 flex flex-col gap-3.5">
+              <div key={connector.provider} className={`card-base p-5 flex flex-col gap-3.5 ${isLocked ? 'opacity-60' : 'card-hover'}`}>
                 <div className="flex items-center justify-between">
                   <div className="w-12 h-12 flex items-center justify-center rounded-xl" style={{ background: `${meta.color}20` }}>
                     <Icon size={24} style={{ color: meta.color }} />
                   </div>
-                  <div className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full ${isConnected ? 'bg-success-dim text-success' : 'bg-surface-6 text-on-muted'}`}>
-                    {isConnected ? <><Check size={12} /> {t('connectors.connected')}</> : <><span className="w-1.5 h-1.5 rounded-full bg-on-muted" /> {t('connectors.notConnected')}</>}
-                  </div>
+                  {isLocked ? (
+                    <div className="inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full bg-surface-6 text-on-muted">
+                      <Lock size={11} /> {t(`billing.planNames.${requiredPlan}`)}
+                    </div>
+                  ) : (
+                    <div className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full ${isConnected ? 'bg-success-dim text-success' : 'bg-surface-6 text-on-muted'}`}>
+                      {isConnected ? <><Check size={12} /> {t('connectors.connected')}</> : <><span className="w-1.5 h-1.5 rounded-full bg-on-muted" /> {t('connectors.notConnected')}</>}
+                    </div>
+                  )}
                 </div>
                 <div className="flex flex-col gap-0.5">
                   <h3 className="text-base font-semibold">{meta.name}</h3>
-                  <p className="text-sm text-on-muted">{isConnected ? t('connectors.syncActive') : PLUGIN_MARKETPLACE_URL[connector.provider] ? t('connectors.viaPlugin') : t('connectors.notConnected')}</p>
+                  <p className="text-sm text-on-muted">
+                    {isLocked
+                      ? t('connectors.requiresPlan', { plan: t(`billing.planNames.${requiredPlan}`) })
+                      : isConnected ? t('connectors.syncActive') : PLUGIN_MARKETPLACE_URL[connector.provider] ? t('connectors.viaPlugin') : t('connectors.notConnected')}
+                  </p>
                 </div>
-                {isConnected ? (
+                {isLocked ? (
+                  <Button variant="secondary" className="w-full" onClick={() => navigate('/settings?tab=billing')}>{t('connectors.upgradeToUnlock', { plan: t(`billing.planNames.${requiredPlan}`) })}</Button>
+                ) : isConnected ? (
                   <Button variant="ghost" className="w-full" onClick={() => handleDisconnect(connector.provider)}>{t('connectors.disconnect')}</Button>
                 ) : connecting === connector.provider ? (
                   <Button variant="secondary" className="w-full" disabled><Loader2 size={16} className="animate-spin" /> {t('connectors.connecting')}</Button>
