@@ -40,12 +40,17 @@ export default function ConnectorsTab() {
   const [connecting, setConnecting] = useState(null)
   const [shopifyModalOpen, setShopifyModalOpen] = useState(false)
   const [shopDomain, setShopDomain] = useState('')
+  // Only set right after the user actually opens a plugin marketplace tab —
+  // NOT just "this provider happens to be disconnected", which used to be
+  // true for almost every account and polled forever. Cleared once
+  // connected or after a few minutes with no result.
+  const [pendingPluginProvider, setPendingPluginProvider] = useState(null)
 
   const notice = searchParams.get('connected') ? { type: 'success', provider: searchParams.get('connected') } : searchParams.get('error') ? { type: 'error', provider: searchParams.get('error') } : null
 
-  const loadConnectors = () => {
-    setLoading(true)
-    api.getConnectors().then(({ connectors }) => setConnectors(connectors)).finally(() => setLoading(false))
+  const loadConnectors = (silent = false) => {
+    if (!silent) setLoading(true)
+    return api.getConnectors().then(({ connectors }) => setConnectors(connectors)).finally(() => { if (!silent) setLoading(false) })
   }
 
   useEffect(() => { loadConnectors() }, [])
@@ -56,14 +61,18 @@ export default function ConnectorsTab() {
   // shown on the lock badge so the user knows exactly what to upgrade to.
   const requiredPlanFor = (provider) => plans.find((p) => p.providers?.includes(provider))?.id
 
-  // While a WordPress (or Drupal) plugin install is in progress in another tab,
-  // poll so the card flips to "Connecté" automatically once the handshake completes.
+  // While a plugin install started in another tab, poll quietly (no loading
+  // spinner) so the card flips to "Connecté" on its own — capped at 3
+  // minutes so it never runs indefinitely.
   useEffect(() => {
-    const hasPendingPluginConnect = connectors.some((c) => ['wordpress', 'drupal', 'prestashop'].includes(c.provider) && c.status !== 'connected')
-    if (!hasPendingPluginConnect) return
-    const interval = setInterval(loadConnectors, 5000)
-    return () => clearInterval(interval)
-  }, [connectors])
+    if (!pendingPluginProvider) return
+    const isNowConnected = connectors.find((c) => c.provider === pendingPluginProvider)?.status === 'connected'
+    if (isNowConnected) { setPendingPluginProvider(null); return }
+
+    const interval = setInterval(() => loadConnectors(true), 5000)
+    const timeout = setTimeout(() => setPendingPluginProvider(null), 3 * 60 * 1000)
+    return () => { clearInterval(interval); clearTimeout(timeout) }
+  }, [pendingPluginProvider, connectors])
 
   const handleConnect = async (provider) => {
     if (provider === 'shopify') {
@@ -72,6 +81,7 @@ export default function ConnectorsTab() {
     }
     if (PLUGIN_MARKETPLACE_URL[provider]) {
       window.open(PLUGIN_MARKETPLACE_URL[provider], '_blank', 'noopener,noreferrer')
+      setPendingPluginProvider(provider)
       return
     }
     if (provider === 'bigcommerce' || provider === 'wix' || provider === 'google_search_console') {
