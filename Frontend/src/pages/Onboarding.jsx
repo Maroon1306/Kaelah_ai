@@ -42,8 +42,11 @@ export default function Onboarding() {
     api.getPlans().then(({ plans }) => setPlans(plans)).catch(() => {})
   }, [])
 
+  // Covers landing back on any earlier step while already subscribed (e.g. a
+  // stale tab, or a browser-level redirect that reset local step state) —
+  // not just the plan step itself.
   useEffect(() => {
-    if (company?.subscriptionStatus === 'active' && step === 3) setStep(4)
+    if (company?.subscriptionStatus === 'active' && step < 4) setStep(4)
   }, [company, step])
 
   const goToNext = () => {
@@ -101,11 +104,14 @@ export default function Onboarding() {
         if (event.name === 'checkout.completed') waitForActiveSubscription()
         if (event.name === 'checkout.error') showToast(t('billing.notConfigured'), 'error')
       })
+      // No successUrl here on purpose: that would hard-navigate the browser
+      // and remount the app, wiping the in-progress step state. Staying in
+      // the SPA and letting checkout.completed (below) advance the step is
+      // what keeps onboarding progress intact.
       Paddle.Checkout.open({
         items: [{ priceId: config.priceId, quantity: 1 }],
         customer: { email: config.customerEmail },
         customData: { companyId: config.companyId },
-        settings: { successUrl: `${window.location.origin}/onboarding` },
       })
     } catch (err) {
       setError(err.message || t('billing.notConfigured'))
