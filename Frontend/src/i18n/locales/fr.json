@@ -182,7 +182,10 @@
         "desc": "Alertes en temps réel sur votre navigateur",
         "unsupported": "Non supporté par ce navigateur",
         "notConfigured": "Les notifications push ne sont pas configurées côté serveur.",
-        "error": "Impossible d'activer les notifications push."
+        "error": "Impossible d'activer les notifications push.",
+        "test": "Envoyer une notification de test",
+        "testSent": "Notification de test envoyée — regarde ton navigateur.",
+        "testFailed": "Échec de l'envoi. Vérifie que les notifications sont bien autorisées."
       },
       "weekly": { "label": "Rapport hebdomadaire", "desc": "Synthèse de votre activité chaque lundi" }
     },

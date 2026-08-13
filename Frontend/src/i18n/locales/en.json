@@ -182,7 +182,10 @@
         "desc": "Real-time alerts in your browser",
         "unsupported": "Not supported by this browser",
         "notConfigured": "Push notifications aren't configured on the server.",
-        "error": "Couldn't enable push notifications."
+        "error": "Couldn't enable push notifications.",
+        "test": "Send a test notification",
+        "testSent": "Test notification sent — check your browser.",
+        "testFailed": "Failed to send. Check that notifications are allowed."
       },
       "weekly": { "label": "Weekly report", "desc": "Summary of your activity every Monday" }
     },

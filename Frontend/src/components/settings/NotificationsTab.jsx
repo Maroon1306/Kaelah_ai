@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AlertCircle } from 'lucide-react'
+import { AlertCircle, Send, Loader2 } from 'lucide-react'
 import { useAuth } from '../../context/AuthContext'
+import { useToast } from '../../context/ToastContext'
 import { api } from '../../services/api'
 import { isPushSupported, getExistingPushSubscription, subscribeToPush, unsubscribeFromPush } from '../../utils/push'
 
@@ -10,10 +11,12 @@ const TOGGLE_KEYS = ['email', 'weekly']
 export default function NotificationsTab() {
   const { t } = useTranslation()
   const { company, setCompany } = useAuth()
+  const showToast = useToast()
   const [saving, setSaving] = useState(null)
   const [pushEnabled, setPushEnabled] = useState(false)
   const [pushBusy, setPushBusy] = useState(false)
   const [pushError, setPushError] = useState('')
+  const [testing, setTesting] = useState(false)
   const prefs = { email: true, weekly: true, ...company?.notificationPrefs }
 
   useEffect(() => {
@@ -56,6 +59,18 @@ export default function NotificationsTab() {
     }
   }
 
+  const sendTestPush = async () => {
+    setTesting(true)
+    try {
+      const result = await api.testPush()
+      showToast(result.sent ? t('settings.notifications.push.testSent') : t('settings.notifications.push.testFailed'), result.sent ? 'success' : 'error')
+    } catch (err) {
+      showToast(err.message, 'error')
+    } finally {
+      setTesting(false)
+    }
+  }
+
   return (
     <div className="card-base p-6 flex flex-col gap-2">
       <h2 className="text-lg font-semibold mb-2">{t('settings.notifications.heading')}</h2>
@@ -92,6 +107,16 @@ export default function NotificationsTab() {
           <span className="px-2.5 py-1 rounded-full bg-surface-6 text-on-muted text-[11px] font-semibold flex-shrink-0">{t('settings.notifications.push.unsupported')}</span>
         )}
       </div>
+      {pushEnabled && (
+        <button
+          className="focus-ring w-fit flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline disabled:opacity-60"
+          onClick={sendTestPush}
+          disabled={testing}
+        >
+          {testing ? <Loader2 size={13} className="animate-spin" /> : <Send size={13} />}
+          {t('settings.notifications.push.test')}
+        </button>
+      )}
       {pushError && <p className="flex items-center gap-1.5 text-sm text-error"><AlertCircle size={14} className="flex-shrink-0" />{pushError}</p>}
     </div>
   )
