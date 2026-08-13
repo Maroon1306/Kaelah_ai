@@ -204,7 +204,15 @@
     "help": {
       "heading": "Aide & Support",
       "knowledgeBase": { "title": "Base de connaissances", "desc": "Trouvez des tutoriels et de la documentation complète." },
-      "liveChat": { "title": "Chat avec le Support", "desc": "Parlez en direct avec un expert Kaelah (24/7)." }
+      "liveChat": { "title": "Chat avec le Support", "desc": "Parlez en direct avec un expert Kaelah (24/7)." },
+      "feedback": {
+        "title": "Envoyer un retour",
+        "desc": "Un bug, une idée, une remarque ? On lit tout.",
+        "placeholder": "Décris ton retour...",
+        "send": "Envoyer",
+        "sending": "Envoi...",
+        "sent": "Merci, ton retour a été envoyé !"
+      }
     }
   },
   "profile": {

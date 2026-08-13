@@ -204,7 +204,15 @@
     "help": {
       "heading": "Help & Support",
       "knowledgeBase": { "title": "Knowledge base", "desc": "Find tutorials and complete documentation." },
-      "liveChat": { "title": "Chat with Support", "desc": "Talk live with a Kaelah expert (24/7)." }
+      "liveChat": { "title": "Chat with Support", "desc": "Talk live with a Kaelah expert (24/7)." },
+      "feedback": {
+        "title": "Send feedback",
+        "desc": "A bug, an idea, a comment? We read everything.",
+        "placeholder": "Describe your feedback...",
+        "send": "Send",
+        "sending": "Sending...",
+        "sent": "Thanks, your feedback was sent!"
+      }
     }
   },
   "profile": {

@@ -133,6 +133,9 @@ export const api = {
   unsubscribePush: (endpoint) => post('/notifications/push/unsubscribe', { endpoint }),
   testPush: () => post('/notifications/push/test'),
 
+  // Feedback
+  submitFeedback: (message) => post('/feedback', { message }),
+
   // Uploads
   uploadFile: (file) => {
     const formData = new FormData()

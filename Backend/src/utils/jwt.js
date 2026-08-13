@@ -9,6 +9,14 @@ export function signAccessToken(user) {
   return jwt.sign({ sub: user.id, email: user.email }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN })
 }
 
+// Admin sessions are a separate, simpler token: a distinct "scope" claim so
+// a regular user's token can never pass requireAdminAuth (and vice versa —
+// an admin token's sub never matches a row in `users`). No refresh-token
+// rotation for admin — it's a low-traffic internal tool, re-login is fine.
+export function signAdminAccessToken(admin) {
+  return jwt.sign({ sub: admin.id, email: admin.email, scope: 'admin' }, JWT_SECRET, { expiresIn: '12h' })
+}
+
 export function verifyAccessToken(token) {
   return jwt.verify(token, JWT_SECRET)
 }

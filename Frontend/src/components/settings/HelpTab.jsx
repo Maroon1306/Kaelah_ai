@@ -1,9 +1,29 @@
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ChevronDown, BookOpen, MessageCircle } from 'lucide-react'
+import { ChevronDown, BookOpen, MessageCircle, Send, CheckCircle2 } from 'lucide-react'
 import { faqItems } from '../../data/mockData'
+import { api } from '../../services/api'
 
 export default function HelpTab() {
   const { t } = useTranslation()
+  const [message, setMessage] = useState('')
+  const [sending, setSending] = useState(false)
+  const [sent, setSent] = useState(false)
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    if (!message.trim()) return
+    setSending(true)
+    try {
+      await api.submitFeedback(message)
+      setMessage('')
+      setSent(true)
+    } catch {
+      // Swallow — the form stays filled so the user can retry.
+    } finally {
+      setSending(false)
+    }
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -34,6 +54,25 @@ export default function HelpTab() {
             <p className="mt-3 text-xs text-on-muted leading-relaxed">{t(`mock.faq.${id}.answer`)}</p>
           </details>
         ))}
+      </div>
+
+      <div className="card-base p-5 flex flex-col gap-3">
+        <h4 className="text-sm font-semibold">{t('settings.help.feedback.title')}</h4>
+        <p className="text-xs text-on-muted -mt-2">{t('settings.help.feedback.desc')}</p>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+          <textarea
+            className="input-field min-h-[90px] resize-none"
+            placeholder={t('settings.help.feedback.placeholder')}
+            value={message}
+            onChange={(e) => { setMessage(e.target.value); setSent(false) }}
+          />
+          <div className="flex items-center gap-3">
+            <button type="submit" disabled={!message.trim() || sending} className="focus-ring inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-ai text-white text-sm font-medium disabled:opacity-50 hover:shadow-glow transition-all w-fit">
+              <Send size={14} />{sending ? t('settings.help.feedback.sending') : t('settings.help.feedback.send')}
+            </button>
+            {sent && <span className="flex items-center gap-1.5 text-xs text-success"><CheckCircle2 size={14} />{t('settings.help.feedback.sent')}</span>}
+          </div>
+        </form>
       </div>
     </div>
   )

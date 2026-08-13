@@ -1,6 +1,10 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from '../context/AuthContext'
+import { AdminAuthProvider } from '../context/AdminAuthContext'
 import ProtectedRoute from '../components/ProtectedRoute'
+import AdminProtectedRoute from '../components/admin/AdminProtectedRoute'
+import AdminLogin from '../pages/admin/AdminLogin'
+import AdminPanel from '../pages/admin/AdminPanel'
 import MainLayout from '../layouts/MainLayout'
 import Landing from '../pages/Landing'
 import Login from '../pages/Login'
@@ -47,6 +51,8 @@ export default function AppRouter() {
           <Route path="/billing" element={<Navigate to="/settings?tab=billing" replace />} />
           <Route path="/connectors" element={<Navigate to="/settings?tab=connectors" replace />} />
           <Route path="/profile" element={<Navigate to="/settings?tab=account" replace />} />
+          <Route path="/admin/login" element={<AdminAuthProvider><AdminLogin /></AdminAuthProvider>} />
+          <Route path="/admin/adminpanel" element={<AdminAuthProvider><AdminProtectedRoute><AdminPanel /></AdminProtectedRoute></AdminAuthProvider>} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
