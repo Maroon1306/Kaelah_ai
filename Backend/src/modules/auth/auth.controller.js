@@ -19,7 +19,8 @@ export async function register(req, res) {
   if (!fullName || !email || !password) throw new HttpError(400, 'Nom complet, email et mot de passe sont requis.')
   if (password.length < 8) throw new HttpError(400, 'Le mot de passe doit contenir au moins 8 caractères.')
 
-  const { user, company } = await authService.registerUser({ fullName, email, password, companyName, companyType })
+  const { user } = await authService.registerUser({ fullName, email, password, companyName, companyType })
+  const company = await authService.getCompanyForUser(user.id)
   const { accessToken, refreshToken } = await authService.issueSession(user)
   setRefreshCookie(res, refreshToken)
   await authService.createEmailOtp(user).catch((err) => console.error('[auth] Échec envoi OTP inscription:', err.message))

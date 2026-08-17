@@ -33,7 +33,7 @@ export async function registerUser({ fullName, email, password, companyName, com
     )
 
     await client.query('COMMIT')
-    return { user, company }
+    return { user }
   } catch (err) {
     await client.query('ROLLBACK')
     throw err
@@ -152,6 +152,12 @@ export async function verifyEmailOtp(userId, code, purpose = 'verify_email') {
   return { verified: true }
 }
 
+// Same shape as requireAuth's req.company (see middleware/auth.js) — kept in
+// sync deliberately so the company object returned right after login/register
+// is never missing a field that a later /me refresh would have, which is
+// exactly what caused a freshly-paid account to bounce back to onboarding
+// (subscriptionStatus was undefined here, so requireSubscription treated it
+// as unpaid) immediately after logging back in.
 export async function getCompanyForUser(userId) {
   const { rows } = await pool.query(
     `SELECT COALESCE(owned.id, member_co.id) AS id,
@@ -159,7 +165,13 @@ export async function getCompanyForUser(userId) {
             COALESCE(owned.company_type, member_co.company_type) AS company_type,
             COALESCE(owned.language, member_co.language) AS language,
             COALESCE(owned.timezone, member_co.timezone) AS timezone,
-            COALESCE(owned.plan, member_co.plan) AS plan
+            COALESCE(owned.plan, member_co.plan) AS plan,
+            COALESCE(owned.paddle_customer_id, member_co.paddle_customer_id) AS paddle_customer_id,
+            COALESCE(owned.paddle_subscription_id, member_co.paddle_subscription_id) AS paddle_subscription_id,
+            COALESCE(owned.subscription_status, member_co.subscription_status) AS subscription_status,
+            COALESCE(owned.notification_prefs, member_co.notification_prefs) AS notification_prefs,
+            COALESCE(owned.ai_preferences, member_co.ai_preferences) AS ai_preferences,
+            CASE WHEN owned.id IS NOT NULL THEN 'admin' ELSE member.role END AS member_role
      FROM users u
      LEFT JOIN companies owned ON owned.user_id = u.id
      LEFT JOIN company_members member ON member.user_id = u.id AND member.status = 'active' AND owned.id IS NULL
@@ -167,5 +179,20 @@ export async function getCompanyForUser(userId) {
      WHERE u.id = $1`,
     [userId]
   )
-  return rows[0]?.id ? rows[0] : null
+  const row = rows[0]
+  if (!row?.id) return null
+  return {
+    id: row.id,
+    name: row.company_name,
+    type: row.company_type,
+    language: row.language,
+    timezone: row.timezone,
+    plan: row.plan,
+    paddleCustomerId: row.paddle_customer_id,
+    paddleSubscriptionId: row.paddle_subscription_id,
+    subscriptionStatus: row.subscription_status,
+    notificationPrefs: row.notification_prefs,
+    aiPreferences: row.ai_preferences,
+    role: row.member_role,
+  }
 }
