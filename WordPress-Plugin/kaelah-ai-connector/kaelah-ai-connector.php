@@ -20,10 +20,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 // Where Kaelah AI is hosted. Update these two constants once you have a real
 // production domain — during local development they point at localhost.
 if ( ! defined( 'KAELAH_APP_URL' ) ) {
-	define( 'KAELAH_APP_URL', 'http://localhost:5173' );
+	define( 'KAELAH_APP_URL', 'https://kaelah-ai.com' );
 }
 if ( ! defined( 'KAELAH_API_URL' ) ) {
-	define( 'KAELAH_API_URL', 'http://localhost:4000' );
+	define( 'KAELAH_API_URL', 'https://api.kaelah-ai.com' );
 }
 
 define( 'KAELAH_CONNECTOR_VERSION', '1.0.0' );

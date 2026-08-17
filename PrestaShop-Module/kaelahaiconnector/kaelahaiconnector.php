@@ -21,8 +21,8 @@ class Kaelahaiconnector extends Module
 
     // Where Kaelah AI is hosted. Update these two once you have a real
     // production domain — during local development they point at localhost.
-    const KAELAH_APP_URL = 'http://localhost:5173';
-    const KAELAH_API_URL = 'http://localhost:4000';
+    const KAELAH_APP_URL = 'https://kaelah-ai.com';
+    const KAELAH_API_URL = 'https://api.kaelah-ai.com';
 
     public function __construct()
     {
