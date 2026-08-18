@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Check, Link2, Lock, Loader2, ShoppingBag, FileText, Layers, Store, Package, Globe, Search, AlertCircle } from 'lucide-react'
+import { Check, Link2, Lock, Loader2, ShoppingBag, FileText, Layers, Store, Package, Globe, Search, AlertCircle, ExternalLink } from 'lucide-react'
 import Button from '../Button'
 import Modal from '../Modal'
 import { useToast } from '../../context/ToastContext'
@@ -24,7 +24,7 @@ const PROVIDER_META = {
 // automatically through the WordPress connector once connected.
 const PLUGIN_MARKETPLACE_URL = {
   wordpress: 'https://wordpress.org/plugins/kaelah-ai-connector/',
-  drupal: 'https://www.drupal.org/project/kaelah_ai_connector',
+  drupal: 'https://www.drupal.org/project/kaelah_ai_connector/releases/1.0.x-dev',
   prestashop: 'https://addons.prestashop.com/en/', // Kaelah AI Connector — free module listing
 }
 
@@ -40,6 +40,12 @@ export default function ConnectorsTab() {
   const [connecting, setConnecting] = useState(null)
   const [shopifyModalOpen, setShopifyModalOpen] = useState(false)
   const [shopDomain, setShopDomain] = useState('')
+  // Unlike Shopify's one-click OAuth install, WordPress/Drupal/PrestaShop
+  // connect through a real plugin/module the user has to install on their
+  // own site (Composer, drush, or an upload) — this modal sets that
+  // expectation before sending them to a plain module listing page that
+  // otherwise gives no hint of what to do next.
+  const [pluginGuideProvider, setPluginGuideProvider] = useState(null)
   // Only set right after the user actually opens a plugin marketplace tab —
   // NOT just "this provider happens to be disconnected", which used to be
   // true for almost every account and polled forever. Cleared once
@@ -80,8 +86,7 @@ export default function ConnectorsTab() {
       return
     }
     if (PLUGIN_MARKETPLACE_URL[provider]) {
-      window.open(PLUGIN_MARKETPLACE_URL[provider], '_blank', 'noopener,noreferrer')
-      setPendingPluginProvider(provider)
+      setPluginGuideProvider(provider)
       return
     }
     if (provider === 'bigcommerce' || provider === 'wix' || provider === 'google_search_console') {
@@ -98,6 +103,12 @@ export default function ConnectorsTab() {
         setConnecting(null)
       }
     }
+  }
+
+  const handleGoToPluginPage = () => {
+    window.open(PLUGIN_MARKETPLACE_URL[pluginGuideProvider], '_blank', 'noopener,noreferrer')
+    setPendingPluginProvider(pluginGuideProvider)
+    setPluginGuideProvider(null)
   }
 
   const handleShopifyConnect = async (e) => {
@@ -190,6 +201,25 @@ export default function ConnectorsTab() {
           <input type="text" required autoFocus className="input-field" placeholder="ma-boutique.myshopify.com" value={shopDomain} onChange={(e) => setShopDomain(e.target.value)} />
           <Button type="submit" variant="primary" className="w-full" disabled={!shopDomain.trim()}>{t('connectors.connect')}</Button>
         </form>
+      </Modal>
+
+      <Modal open={!!pluginGuideProvider} onClose={() => setPluginGuideProvider(null)} title={t('connectors.pluginGuide.title', { name: pluginGuideProvider ? PROVIDER_META[pluginGuideProvider]?.name : '' })} size="sm">
+        {pluginGuideProvider && (
+          <div className="flex flex-col gap-4">
+            <p className="text-sm text-on-muted">{t('connectors.pluginGuide.intro', { name: PROVIDER_META[pluginGuideProvider]?.name })}</p>
+            <ol className="flex flex-col gap-2.5">
+              {t(`connectors.pluginGuide.steps.${pluginGuideProvider}`, { returnObjects: true }).map((step, i) => (
+                <li key={i} className="flex items-start gap-2.5 text-sm">
+                  <span className="w-5 h-5 rounded-full bg-primary-dim text-primary text-[11px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">{i + 1}</span>
+                  <span>{step}</span>
+                </li>
+              ))}
+            </ol>
+            <Button variant="primary" className="w-full" onClick={handleGoToPluginPage}>
+              <ExternalLink size={16} /> {t('connectors.pluginGuide.cta')}
+            </Button>
+          </div>
+        )}
       </Modal>
     </>
   )

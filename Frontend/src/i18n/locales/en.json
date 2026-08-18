@@ -277,6 +277,28 @@
     "disconnectSuccess": "{{name}} was disconnected.",
     "requiresPlan": "Requires the {{plan}} plan",
     "upgradeToUnlock": "Unlock with {{plan}}",
+    "pluginGuide": {
+      "title": "Connect {{name}}",
+      "intro": "{{name}} connects through an official plugin you install on your own site — here's how:",
+      "cta": "View the plugin and install it",
+      "steps": {
+        "wordpress": [
+          "On the page that opens, click \"Download\" (or \"Install Now\" if you get there from Plugins > Add New in your WordPress admin)",
+          "Activate the plugin from Plugins > Installed Plugins",
+          "Open the \"Kaelah AI\" menu in your WordPress admin and click \"Connect to Kaelah AI\""
+        ],
+        "drupal": [
+          "Install the module via Composer (composer require drupal/kaelah_ai_connector) or download the archive from the page that opens",
+          "Enable it: drush en kaelah_ai_connector, or via Extend in the Drupal admin",
+          "Go to Configuration > Web services > Kaelah AI and click \"Connect to Kaelah AI\""
+        ],
+        "prestashop": [
+          "Download the module (ZIP file) from the page that opens",
+          "In your back office, go to Modules > Module Manager > Upload a module, and upload the ZIP",
+          "Once installed, open its configuration and click \"Connect to Kaelah AI\""
+        ]
+      }
+    },
     "fields": {
       "siteUrl": "Site URL",
       "consumerKey": "Consumer Key",
