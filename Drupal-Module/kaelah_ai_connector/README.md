@@ -1,6 +1,6 @@
 # Kaelah AI Connector
 
-Connects this Drupal site to [Kaelah AI](https://kaelah.ai) in one click — no API key or password to copy and paste.
+Connects this Drupal site to [Kaelah AI](https://kaelah-ai.com) in one click — no API key or password to copy and paste.
 
 This module performs no SEO, GEO or AI analysis itself. All intelligence runs on Kaelah AI's own servers — this module only establishes a secure, authenticated connection so Kaelah AI can:
 
