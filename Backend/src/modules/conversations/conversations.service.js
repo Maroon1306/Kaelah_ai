@@ -70,7 +70,7 @@ export async function addMessage(conversationId, role, content, metadata = {}) {
 
 export async function getRecentHistory(conversationId, limit = 20) {
   const { rows } = await pool.query(
-    'SELECT role, content FROM messages WHERE conversation_id = $1 ORDER BY created_at DESC LIMIT $2',
+    'SELECT role, content, metadata FROM messages WHERE conversation_id = $1 ORDER BY created_at DESC LIMIT $2',
     [conversationId, limit]
   )
   return rows.reverse()

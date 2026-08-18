@@ -126,6 +126,27 @@ export async function updateProductSEO(connector, { productId, title, seoTitle, 
   return { product: data.product }
 }
 
+/**
+ * Replaces every existing image on a product with a single new one, fetched
+ * by Shopify itself from the given external URL (Cloudinary, in practice —
+ * wherever the user's chat upload landed). Deletes the old images after the
+ * new one is confirmed attached, so a failed upload never leaves the
+ * product with no image at all.
+ */
+export async function replaceProductImage(connector, { productId, imageUrl }) {
+  const http = client(connector)
+  const { data: existing } = await http.get(`/products/${productId}/images.json`)
+  const oldImages = existing.images || []
+
+  const { data: created } = await http.post(`/products/${productId}/images.json`, { image: { src: imageUrl } })
+
+  for (const img of oldImages) {
+    await http.delete(`/products/${productId}/images/${img.id}.json`).catch(() => {})
+  }
+
+  return { image: created.image }
+}
+
 export async function getCollections(connector, limit = 10) {
   const http = client(connector)
   const [custom, smart] = await Promise.all([

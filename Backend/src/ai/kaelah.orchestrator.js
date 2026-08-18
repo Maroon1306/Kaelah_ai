@@ -50,7 +50,32 @@ Règles:
 - Ne jamais mentionner le nom d'une plateforme technique (Shopify, WordPress, Drupal, WooCommerce...) dans un titre SEO ou une meta description généré — ce n'est pas professionnel et n'a aucune valeur pour l'utilisateur final. Le texte SEO doit parler du produit/contenu/entreprise, jamais de l'outil technique utilisé pour le gérer.
 - Pour optimiser le SEO de la page d'accueil d'un site (par opposition à un produit/article/page précis), utilise toujours l'outil dédié à la page d'accueil de la plateforme concernée, jamais l'outil de mise à jour d'un contenu individuel avec une URL en guise de nom.
 - Réponds en français sauf si l'utilisateur écrit en anglais.
-- Sois concis et concret.`
+- Sois concis et concret.
+- Quand l'utilisateur joint une image, tu la vois réellement (vision) — décris/analyse-la si on te le demande. Si l'utilisateur veut l'utiliser comme nouvelle photo d'un produit ("remplace l'image de ce produit par celle-ci"), utilise l'outil de mise à jour d'image produit de la plateforme connectée avec l'URL exacte de l'image jointe (donnée juste avant l'image dans la conversation) — ne jamais inventer une URL.`
+}
+
+/**
+ * Turns a stored message into what OpenAI expects. Plain text for anything
+ * without attachments; for a user message with attachments, a multi-part
+ * body so the model actually sees the image (vision), not just a URL typed
+ * into the text — the URL is still included as text too so the model can
+ * quote/pass it as a tool argument (e.g. to replace a product image).
+ */
+function buildMessageContent(m) {
+  const attachments = m.metadata?.attachments
+  if (!attachments?.length) return m.content
+
+  const parts = []
+  if (m.content) parts.push({ type: 'text', text: m.content })
+  for (const a of attachments) {
+    if (a.type?.startsWith('image')) {
+      parts.push({ type: 'text', text: `[Image jointe : ${a.name}] ${a.url}` })
+      parts.push({ type: 'image_url', image_url: { url: a.url } })
+    } else {
+      parts.push({ type: 'text', text: `[Fichier joint : ${a.name}] ${a.url}` })
+    }
+  }
+  return parts
 }
 
 function buildCardsFromToolResults(toolResults) {
@@ -70,7 +95,7 @@ function buildCardsFromToolResults(toolResults) {
   return cards
 }
 
-export async function handleChatMessage({ companyId, plan, subscriptionStatus, autoActions = false, conversationId, text }) {
+export async function handleChatMessage({ companyId, plan, subscriptionStatus, autoActions = false, conversationId, text, attachments = [] }) {
   const client = getOpenAIClient()
   if (!client) throw new HttpError(503, "OPENAI_API_KEY n'est pas configurée côté serveur — le chat ne peut pas répondre pour le moment.")
 
@@ -86,10 +111,10 @@ export async function handleChatMessage({ companyId, plan, subscriptionStatus, a
     await conversations.assertOwnership(companyId, conversationId)
     conversation = { id: conversationId }
   } else {
-    conversation = await conversations.createConversation(companyId, text)
+    conversation = await conversations.createConversation(companyId, text || attachments[0]?.name || 'Nouvelle conversation')
   }
 
-  await conversations.addMessage(conversation.id, 'user', text)
+  await conversations.addMessage(conversation.id, 'user', text, attachments.length ? { attachments } : {})
 
   const { messagesPerMonth } = getPlanLimits(plan)
   if (messagesPerMonth != null) {
@@ -111,7 +136,7 @@ export async function handleChatMessage({ companyId, plan, subscriptionStatus, a
   const history = await conversations.getRecentHistory(conversation.id, 20)
   const messages = [
     { role: 'system', content: systemPrompt },
-    ...history.map((m) => ({ role: m.role, content: m.content })),
+    ...history.map((m) => ({ role: m.role, content: buildMessageContent(m) })),
   ]
 
   let completion = await client.chat.completions.create({

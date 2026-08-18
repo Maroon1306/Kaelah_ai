@@ -101,6 +101,7 @@
     "rejectAction": "Reject",
     "actions": {
       "updateShopifyProductSeo": "Update Shopify product SEO",
+      "updateShopifyProductImage": "Replace Shopify product image",
       "updateShopifyShopSeo": "Update homepage SEO",
       "updateWordpressSeo": "Update WordPress SEO",
       "updateWordpressHomepageSeo": "Update WordPress homepage SEO",

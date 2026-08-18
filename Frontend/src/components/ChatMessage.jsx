@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { User, Sparkles, Copy, ThumbsUp, ThumbsDown, RotateCw, Check, X, Loader2 } from 'lucide-react'
+import { User, Sparkles, Copy, ThumbsUp, ThumbsDown, RotateCw, Check, X, Loader2, FileText } from 'lucide-react'
 import AIResponseCard from './AIResponseCard'
 import KaelahLogo from './KaelahLogo'
 import { api } from '../services/api'
@@ -8,12 +8,37 @@ import { api } from '../services/api'
 export default function ChatMessage({ message }) {
   const { t } = useTranslation()
   const isUser = message.role === 'user'
+  const images = message.attachments?.filter((a) => a.type?.startsWith('image')) || []
+  const files = message.attachments?.filter((a) => !a.type?.startsWith('image')) || []
 
   if (isUser) {
     return (
       <div className="flex justify-end gap-3 max-w-[800px] mx-auto w-full animate-fade-up">
-        <div className="bg-surface-4 px-4 py-3 rounded-2xl rounded-br-md max-w-[75%]">
-          <p className="text-sm text-on-surface">{message.text}</p>
+        <div className="flex flex-col items-end gap-2 max-w-[75%]">
+          {images.length > 0 && (
+            <div className="flex flex-wrap justify-end gap-2">
+              {images.map((img) => (
+                <a key={img.id} href={img.url} target="_blank" rel="noreferrer" className="block w-40 h-40 rounded-2xl overflow-hidden border border-border">
+                  <img src={img.url} alt={img.name} className="w-full h-full object-cover" />
+                </a>
+              ))}
+            </div>
+          )}
+          {files.length > 0 && (
+            <div className="flex flex-col gap-1.5 items-end">
+              {files.map((f) => (
+                <a key={f.id} href={f.url} target="_blank" rel="noreferrer" className="flex items-center gap-2 px-3 py-2 rounded-xl bg-surface-4 border border-border text-[13px] hover:bg-surface-6 transition-colors">
+                  <FileText size={14} className="text-on-muted flex-shrink-0" />
+                  <span className="truncate max-w-[200px]">{f.name}</span>
+                </a>
+              ))}
+            </div>
+          )}
+          {message.text && (
+            <div className="bg-surface-4 px-4 py-3 rounded-2xl rounded-br-md">
+              <p className="text-sm text-on-surface">{message.text}</p>
+            </div>
+          )}
         </div>
         <div className="w-8 h-8 rounded-lg bg-surface-6 text-on-muted flex items-center justify-center flex-shrink-0">
           <User size={16} />
@@ -59,6 +84,7 @@ export default function ChatMessage({ message }) {
 
 const ACTION_LABELS = {
   update_shopify_product_seo: 'chat.actions.updateShopifyProductSeo',
+  update_shopify_product_image: 'chat.actions.updateShopifyProductImage',
   update_shopify_shop_seo: 'chat.actions.updateShopifyShopSeo',
   update_wordpress_seo: 'chat.actions.updateWordpressSeo',
   update_wordpress_homepage_seo: 'chat.actions.updateWordpressHomepageSeo',

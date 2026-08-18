@@ -93,7 +93,7 @@ export const api = {
   // Conversations & chat
   getConversations: () => request('/conversations'),
   getConversation: (id) => request(`/conversations/${id}`),
-  sendMessage: (message, conversationId) => post('/chat', { message, conversationId }),
+  sendMessage: (message, conversationId, attachments) => post('/chat', { message, conversationId, attachments }),
 
   // Actions
   confirmAction: (id) => post(`/actions/${id}/confirm`),

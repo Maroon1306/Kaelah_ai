@@ -46,9 +46,7 @@ export default function Chat() {
 
   const handleSend = () => {
     if (!input.trim() && attachments.length === 0) return
-    const attachmentLines = attachments.map((a) => `📎 ${a.name}: ${a.url}`).join('\n')
-    const fullText = [input.trim(), attachmentLines].filter(Boolean).join('\n\n')
-    sendMessage(fullText)
+    sendMessage(input.trim(), attachments)
     setInput('')
     setAttachments([])
   }

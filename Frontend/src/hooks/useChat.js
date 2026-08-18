@@ -9,6 +9,7 @@ function mapMessage(row) {
     role: row.role,
     text: row.content,
     cards: row.metadata?.cards || [],
+    attachments: row.metadata?.attachments || [],
     actions: row.actions || row.metadata?.actions || [],
   }
 }
@@ -36,15 +37,15 @@ export function useChat(conversationId) {
     return () => { cancelled = true }
   }, [conversationId])
 
-  const sendMessage = useCallback(async (text) => {
-    const userMsg = { id: `local-${Date.now()}`, role: 'user', text }
+  const sendMessage = useCallback(async (text, attachments = []) => {
+    const userMsg = { id: `local-${Date.now()}`, role: 'user', text, attachments }
     setMessages((prev) => [...prev, userMsg])
     setIsThinking(true)
     setPhase('thinking')
     const analyzingTimer = setTimeout(() => setPhase('analyzing'), 1000)
 
     try {
-      const response = await api.sendMessage(text, conversationId)
+      const response = await api.sendMessage(text, conversationId, attachments)
       clearTimeout(analyzingTimer)
       setMessages((prev) => [...prev, mapMessage(response.message)])
       playNotificationSound()

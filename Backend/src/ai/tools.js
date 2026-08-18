@@ -211,6 +211,31 @@ export const TOOLS = [
     schema: {
       type: 'function',
       function: {
+        name: 'update_shopify_product_image',
+        description: "Remplace la photo d'un produit Shopify réel par une image que l'utilisateur vient de joindre dans le chat. Le produit est identifié par son nom exact (productName), jamais deviné de mémoire. imageUrl doit être l'URL exacte de l'image jointe telle que donnée dans la conversation juste avant l'image — ne jamais inventer une URL. Nécessite une confirmation utilisateur avant application.",
+        parameters: {
+          type: 'object',
+          properties: {
+            productName: { type: 'string', description: 'Nom/titre exact du produit tel que renvoyé par get_shopify_products' },
+            imageUrl: { type: 'string', description: "URL exacte de l'image jointe par l'utilisateur dans le chat" },
+          },
+          required: ['productName', 'imageUrl'],
+        },
+      },
+    },
+    async execute(args, { companyId }) {
+      const connector = await getConnector(companyId, 'shopify')
+      if (!connector) return { error: 'not_connected', message: "Le connecteur Shopify n'est pas connecté." }
+      const product = await shopify.findProductByTitle(connector, args.productName)
+      if (!product) return { error: 'product_not_found', message: `Produit introuvable : "${args.productName}". Récupère la liste des produits à jour avant de réessayer.` }
+      return shopify.replaceProductImage(connector, { productId: product.id, imageUrl: args.imageUrl })
+    },
+  },
+  {
+    mutating: true,
+    schema: {
+      type: 'function',
+      function: {
         name: 'update_shopify_shop_seo',
         description: "Met à jour le titre SEO et la meta description de la page d'accueil de la boutique Shopify réelle (visibles dans les résultats de recherche). Contrainte SEO stricte : title doit faire entre 50 et 60 caractères (jamais plus de 70) ; description doit faire au maximum 150 caractères. Nécessite une confirmation utilisateur avant application.",
         parameters: {

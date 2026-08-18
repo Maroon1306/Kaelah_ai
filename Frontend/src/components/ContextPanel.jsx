@@ -8,6 +8,7 @@ import { PROVIDER_META } from '../data/providerMeta'
 
 const ACTION_LABELS = {
   update_shopify_product_seo: 'chat.actions.updateShopifyProductSeo',
+  update_shopify_product_image: 'chat.actions.updateShopifyProductImage',
   update_shopify_shop_seo: 'chat.actions.updateShopifyShopSeo',
   update_wordpress_seo: 'chat.actions.updateWordpressSeo',
   update_wordpress_homepage_seo: 'chat.actions.updateWordpressHomepageSeo',
