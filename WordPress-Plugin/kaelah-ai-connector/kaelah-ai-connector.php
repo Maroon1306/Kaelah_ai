@@ -1,13 +1,12 @@
 <?php
 /**
  * Plugin Name:       Kaelah AI Connector
- * Plugin URI:        https://kaelah.ai
  * Description:       Connecte votre site WordPress à Kaelah AI en un clic, sans clé API ni mot de passe à saisir. Toute l'intelligence (SEO, GEO, optimisations) reste hébergée sur les serveurs de Kaelah AI ; ce plugin ne fait que servir de passerelle sécurisée.
  * Version:           1.0.0
  * Requires at least: 5.6
  * Requires PHP:      7.4
  * Author:            Kaelah AI
- * Author URI:        https://kaelah.ai
+ * Author URI:        https://kaelah-ai.com
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       kaelah-ai-connector

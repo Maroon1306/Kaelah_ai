@@ -12,7 +12,7 @@ Connect your WordPress site to Kaelah AI in one click — no API key or applicat
 
 == Description ==
 
-Kaelah AI Connector is the official bridge between your WordPress site and [Kaelah AI](https://kaelah.ai), a conversational AI assistant that helps you manage and optimize your online business.
+Kaelah AI Connector is the official bridge between your WordPress site and [Kaelah AI](https://kaelah-ai.com), a conversational AI assistant that helps you manage and optimize your online business.
 
 This plugin does not perform any SEO, GEO or AI analysis itself. All intelligence runs on Kaelah AI's own servers — this plugin only establishes a secure, authenticated connection so Kaelah AI can:
 
