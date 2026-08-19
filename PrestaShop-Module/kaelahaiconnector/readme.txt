@@ -18,7 +18,7 @@ This module does not perform any SEO, GEO or AI analysis itself. All intelligenc
 = How it works =
 
 1. In Kaelah AI, go to Settings > Connectors and click "Connect" next to PrestaShop.
-2. You'll land on this module's page on PrestaShop Addons. Download and install it.
+2. The module downloads directly from Kaelah AI. Install it from Modules > Module Manager > Upload a module.
 3. Open Modules > Kaelah AI Connector > Configure, and click "Connecter à Kaelah AI".
 4. You'll be asked to approve the connection on Kaelah AI. Approve it.
 5. You're redirected back here, now connected — no keys or passwords ever typed.
@@ -32,7 +32,7 @@ This module does not perform any SEO, GEO or AI analysis itself. All intelligenc
 
 == Installation ==
 
-1. Download the module and install it from Modules > Module Manager > Upload a module, or install directly from PrestaShop Addons.
+1. Download the module from Kaelah AI's connectors page and install it from Modules > Module Manager > Upload a module.
 2. Go to Modules > Kaelah AI Connector > Configure.
 3. Click "Connecter à Kaelah AI".
 

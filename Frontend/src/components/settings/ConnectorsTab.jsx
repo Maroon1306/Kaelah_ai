@@ -22,10 +22,13 @@ const PROVIDER_META = {
 // "Kaelah AI Connector" plugin/module — no URL, API key or password is ever
 // requested here. WooCommerce isn't its own connector: it's detected
 // automatically through the WordPress connector once connected.
+// PrestaShop's module isn't on Addons (their seller program requires a
+// registered business/SIRET) — self-hosted directly from our own domain
+// instead. Same manual upload-and-enable flow either way.
 const PLUGIN_MARKETPLACE_URL = {
   wordpress: 'https://wordpress.org/plugins/kaelah-ai-connector/',
   drupal: 'https://www.drupal.org/project/kaelah_ai_connector/releases/1.0.x-dev',
-  prestashop: 'https://addons.prestashop.com/en/', // Kaelah AI Connector — free module listing
+  prestashop: '/downloads/kaelahaiconnector.zip',
 }
 
 export default function ConnectorsTab() {
