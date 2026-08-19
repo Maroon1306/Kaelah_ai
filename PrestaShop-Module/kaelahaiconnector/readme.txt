@@ -8,7 +8,7 @@ Connect your PrestaShop store to Kaelah AI in one click — no API key or passwo
 
 == Description ==
 
-Kaelah AI Connector is the official bridge between your PrestaShop store and Kaelah AI (https://kaelah.ai), a conversational AI assistant that helps you manage and optimize your online business.
+Kaelah AI Connector is the official bridge between your PrestaShop store and Kaelah AI (https://kaelah-ai.com), a conversational AI assistant that helps you manage and optimize your online business.
 
 This module does not perform any SEO, GEO or AI analysis itself. All intelligence runs on Kaelah AI's own servers — this module only establishes a secure, authenticated connection so Kaelah AI can:
 
