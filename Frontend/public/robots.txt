@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+Disallow: /chat
+Disallow: /settings
+Disallow: /billing
+Disallow: /connectors
+Disallow: /profile
+Disallow: /onboarding
+Disallow: /connect/
+Disallow: /team/
+Disallow: /admin/
+Disallow: /login
+Disallow: /register
+
+Sitemap: https://kaelah-ai.com/sitemap.xml
