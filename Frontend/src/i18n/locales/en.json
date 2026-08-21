@@ -419,7 +419,7 @@
       "success": "Message sent! We'll get back to you shortly."
     },
     "directHeading": "Or reach us directly",
-    "directEmail": "contact@kaelah.ai"
+    "directEmail": "contact@kaelah-ai.com"
   },
   "blog": {
     "title": "Kaelah AI Blog",
@@ -438,7 +438,7 @@
         { "heading": "Data sharing", "body": "Your data is only shared with the connectors you activate yourself (Shopify, WordPress, etc.) and our technical subcontractors, under confidentiality obligations." },
         { "heading": "Cookies", "body": "We use cookies essential to the site's operation and anonymized audience-measurement cookies. You can disable them in your browser settings." },
         { "heading": "Your rights", "body": "You may at any time request access to, correction of, or deletion of your personal data by contacting us." },
-        { "heading": "Contact", "body": "For any question regarding your data, write to us at privacy@kaelah.ai." }
+        { "heading": "Contact", "body": "For any question regarding your data, write to us at privacy@kaelah-ai.com." }
       ]
     },
     "terms": {
@@ -457,7 +457,7 @@
     "notice": {
       "title": "Legal Notice",
       "sections": [
-        { "heading": "Site publisher", "body": "The Kaelah AI website is published by FANASINA Michael, an individual entrepreneur based in Madagascar. Contact: contact@kaelah.ai." },
+        { "heading": "Site publisher", "body": "The Kaelah AI website is published by FANASINA Michael, an individual entrepreneur based in Madagascar. Contact: contact@kaelah-ai.com." },
         { "heading": "Hosting", "body": "Hosting information is available on request from the publisher." },
         { "heading": "Intellectual property", "body": "All content on this site (text, visuals, the Kaelah AI brand) is protected. Any reproduction, even partial, requires prior authorization." },
         { "heading": "Governing law", "body": "This website is subject to Malagasy law. In the event of a dispute, the competent Malagasy courts shall have sole jurisdiction." }
