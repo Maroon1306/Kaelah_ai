@@ -1,5 +1,5 @@
 === Kaelah AI Connector ===
-Contributors: kaelahai
+Contributors: michael1306
 Tags: ai, seo, automation, connector, ecommerce
 Requires at least: 5.6
 Tested up to: 7.0
@@ -39,6 +39,15 @@ This plugin does not perform any SEO, GEO or AI analysis itself. All intelligenc
 1. Upload the plugin files to `/wp-content/plugins/kaelah-ai-connector`, or install directly from the WordPress plugin directory.
 2. Activate the plugin through the "Plugins" screen.
 3. Go to the "Kaelah AI" menu and click "Connecter à Kaelah AI".
+
+== External services ==
+
+This plugin connects your site to the Kaelah AI API (api.kaelah-ai.com), the backend of the Kaelah AI service that this plugin bridges your site to. It is needed to authenticate your site and to let Kaelah AI read and update your content when you use its chat interface.
+
+* When you click "Connecter à Kaelah AI" and approve the connection, your site URL and site name are sent to Kaelah AI to complete the handshake and issue an access token.
+* After that, whenever you ask Kaelah AI (from its own chat interface, not from this site) to look at or change something, Kaelah AI's servers request the relevant data from this site over an authenticated REST API — post/page/product titles, content and SEO metadata, media alt text, categories, and WooCommerce order totals if WooCommerce is active. Nothing is sent automatically outside of these authenticated requests.
+
+This service is provided by Kaelah AI: [Terms of Service](https://kaelah-ai.com/terms), [Privacy Policy](https://kaelah-ai.com/privacy).
 
 == Frequently Asked Questions ==
 

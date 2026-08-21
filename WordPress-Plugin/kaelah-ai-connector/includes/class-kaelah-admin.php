@@ -45,6 +45,11 @@ class Kaelah_Admin {
 		if ( ! isset( $_GET['code'] ) || ! current_user_can( 'manage_options' ) ) {
 			return;
 		}
+		if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wpnonce'] ) ), 'kaelah_connect' ) ) {
+			set_transient( 'kaelah_connect_error', __( 'Lien de connexion invalide ou expiré. Merci de réessayer.', 'kaelah-ai-connector' ), 60 );
+			wp_safe_redirect( admin_url( 'admin.php?page=kaelah-ai-connector' ) );
+			exit;
+		}
 
 		$code = sanitize_text_field( wp_unslash( $_GET['code'] ) );
 
@@ -98,8 +103,15 @@ class Kaelah_Admin {
 		exit;
 	}
 
+	/**
+	 * The nonce travels inside callback_url itself (not as a sibling param to
+	 * Kaelah's consent page) because Kaelah's backend only ever appends
+	 * `code` to whatever callback_url it was given — it never inspects or
+	 * forwards separate top-level params. Embedding it here is what makes it
+	 * survive the round trip back to handle_callback().
+	 */
 	private function get_connect_url() {
-		$callback_url = admin_url( 'admin.php?page=kaelah-ai-connector' );
+		$callback_url = add_query_arg( '_wpnonce', wp_create_nonce( 'kaelah_connect' ), admin_url( 'admin.php?page=kaelah-ai-connector' ) );
 
 		$params = array(
 			'site_url'     => home_url(),
